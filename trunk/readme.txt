@@ -11,5 +11,5 @@ matplotlib 0.91.4
 Install all of these before trying pyFprime. Compatibility with other versions of these packages is unknown.
 
 Bob Von Dreele
-10/26/2008
+5/14/2009
 

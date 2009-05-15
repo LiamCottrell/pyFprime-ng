@@ -173,9 +173,14 @@ class Fprime(wx.Frame):
         self.fpplot = pylab.figure(self.fppfignum,facecolor='white')
         self.ffplot.canvas.set_window_title('X-ray Form Factors')
         self.fpplot.canvas.set_window_title('X-Ray Resonant Scattering Factors')
+        self.fpplot.canvas.mpl_connect('pick_event', self.OnPick)
+        self.fpplot.canvas.mpl_connect('button_release_event', self.OnRelease)
+        self.fpplot.canvas.mpl_connect('motion_notify_event', self.OnMotion)
         mpl.rcParams['axes.grid'] = True
         mpl.rcParams['legend.fontsize'] = 10
         self.Bind(wx.EVT_CLOSE, self.ExitMain)
+        self.Lines = []
+        self.linePicked = None
 
     def ExitMain(self, event):
         sys.exit()
@@ -281,12 +286,12 @@ class Fprime(wx.Frame):
         if self.ifWave: 
             ax.set_xlabel(r'$\mathsf{wavelength, \AA}$',fontsize=14)
             ax.set_xlim(self.Wmin,self.Wmax)
-            ax.axvline(x=Wave)
+            ax.axvline(x=Wave,picker=3)
         else:
             ax.set_xlabel(r'$\mathsf{Energy, keV}$',fontsize=14)
             ax.set_xscale('log')
             ax.set_xlim(self.Kev/self.Wmax,self.Kev/self.Wmin)
-            ax.axvline(x=self.Kev/Wave)
+            ax.axvline(x=self.Kev/Wave,picker=3)
         Ymin = 0.0
         Ymax = 0.0
         if self.FPPS: 
@@ -304,6 +309,27 @@ class Fprime(wx.Frame):
         ax.legend(loc='best',numpoints=2)
         pylab.figure(self.fppfignum)
         pylab.draw()
+        
+    def OnPick(self, event):
+        self.linePicked = event.artist
+        
+    def OnMotion(self,event):
+        if self.linePicked:
+            xpos = event.xdata
+            if xpos:
+                self.fpplot.canvas.SetToolTipString('%9.3f'%(xpos))
+
+    def OnRelease(self, event):
+        if self.linePicked is None: return
+        xpos = event.xdata
+        if xpos:
+            if self.ifWave:
+                Wave = xpos
+            else:
+                Wave = self.Kev/xpos               
+            self.SetWaveEnergy(Wave)
+            
+        self.linePicked = None
 
     def UpDateFFPlot(self):
         "generate a set of form factor curves & plot them vs sin-theta/lambda or q or 2-theta"
@@ -480,7 +506,7 @@ class Fprime(wx.Frame):
     def OnABOUTItems0Menu(self, event):
         info = wx.AboutDialogInfo()
         info.Name = 'pyFprime'
-        info.Version = '0.0.1'
+        info.Version = '0.1.1'
         info.Copyright = '''
 Robert B. Von Dreele, 2008(C)
 Argonne National Laboratory

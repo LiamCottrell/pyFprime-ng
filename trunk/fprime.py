@@ -344,7 +344,7 @@ class Fprime(wx.Frame):
         elif self.FFxaxis == 'T':
             ax.set_xlabel(r'$\mathsf{2\theta}$',fontsize=14)
         else:
-            ax.set_xlabel(r'$q, \AA$',fontsize=14)
+            ax.set_xlabel(r'$Q, \AA$',fontsize=14)
         ax.set_ylabel('f, e-',fontsize=12)
         E = self.Energy
         DE = E*self.Eres                         #smear by defined source resolution
@@ -414,7 +414,7 @@ class Fprime(wx.Frame):
         self.Results.Update()
         self.UpDateFPPlot(Wave)
         self.UpDateFFPlot()
-        pylab.show()
+        #pylab.show()
 
     def CalcFPPS(self):
         """generate set of f' & f" curves for selected elements
@@ -492,9 +492,9 @@ class Fprime(wx.Frame):
 
     def OnButton2(self, event):
         if event.GetEventObject().GetLabel() == "sin(theta)/lambda":
-            event.GetEventObject().SetLabel("q")
+            event.GetEventObject().SetLabel("Q")
             self.FFxaxis = 'Q'
-        elif event.GetEventObject().GetLabel() == 'q':
+        elif event.GetEventObject().GetLabel() == 'Q':
             event.GetEventObject().SetLabel('2-theta')
             self.FFxaxis = 'T'
         else:

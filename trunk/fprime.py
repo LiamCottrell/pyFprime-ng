@@ -7,10 +7,20 @@ import wx
 import Element
 import matplotlib as mpl
 import numpy
-if os.name == 'nt':
+# use the newer wxmpl when needed
+(main,sub) = mpl.__version__.split('.')[0:2]
+if int(main) > 0 or int(sub) > 91: 
+    import wxmpl131 as wxmpl
+else:
     import wxmpl
+
 import pylab
 import sys
+
+# print versions
+#print "python: ",sys.version[:5]
+#print "wxpython: ",wx.__version__
+#print "Matplotlib: ",mpl.__version__
 
 def create(parent):
     return Fprime(parent)
@@ -316,7 +326,7 @@ class Fprime(wx.Frame):
     def OnMotion(self,event):
         if self.linePicked:
             xpos = event.xdata
-            if xpos:
+            if xpos and hasattr(self.fpplot.canvas,'SetToolTipString'):
                 self.fpplot.canvas.SetToolTipString('%9.3f'%(xpos))
 
     def OnRelease(self, event):
@@ -414,7 +424,7 @@ class Fprime(wx.Frame):
         self.Results.Update()
         self.UpDateFPPlot(Wave)
         self.UpDateFFPlot()
-        #pylab.show()
+        pylab.show()
 
     def CalcFPPS(self):
         """generate set of f' & f" curves for selected elements

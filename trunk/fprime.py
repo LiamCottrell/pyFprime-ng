@@ -12,15 +12,20 @@ import numpy
 if int(main) > 0 or int(sub) > 91: 
     import wxmpl131 as wxmpl
 else:
-    import wxmpl
+    import wxmpl129a as wxmpl
 
 import pylab
 import sys
 
 # print versions
-#print "python: ",sys.version[:5]
-#print "wxpython: ",wx.__version__
-#print "Matplotlib: ",mpl.__version__
+print "Available python module versions for pyFprime:"
+print "python:     ",sys.version[:5]
+print "wxpython:   ",wx.__version__
+print "matplotlib: ",mpl.__version__
+print "numpy:      ",numpy.__version__
+print "wxmpl:      ",wxmpl.__version__
+
+__version__ = '0.1.2'
 
 def create(parent):
     return Fprime(parent)
@@ -100,9 +105,9 @@ class Fprime(wx.Frame):
         # generated method, don't edit
 
         parent.Append(help='Add new element', id=wxID_FPRIMENEW, kind=wx.ITEM_NORMAL,
-              text='&New')
+              text='&New Element')
         self.Delete = parent.Append(help='Delete an element', id=wxID_FPRIMEDELETE, kind=wx.ITEM_NORMAL,
-              text='&Delete')
+              text='&Delete Element')
         self.Delete.Enable(False)
         parent.Append(help='Exit Fprime', id=wxID_FPRIMEEXIT, kind=wx.ITEM_NORMAL,
               text='&Exit')
@@ -328,7 +333,6 @@ class Fprime(wx.Frame):
             xpos = event.xdata
             if xpos and hasattr(self.fpplot.canvas,'SetToolTipString'):
                 self.fpplot.canvas.SetToolTipString('%9.3f'%(xpos))
-
     def OnRelease(self, event):
         if self.linePicked is None: return
         xpos = event.xdata
@@ -516,11 +520,13 @@ class Fprime(wx.Frame):
     def OnABOUTItems0Menu(self, event):
         info = wx.AboutDialogInfo()
         info.Name = 'pyFprime'
-        info.Version = '0.1.1'
+        info.Version = __version__
         info.Copyright = '''
 Robert B. Von Dreele, 2008(C)
 Argonne National Laboratory
-        '''
+This product includes software developed 
+by the UChicago Argonne, LLC, as 
+Operator of Argonne National Laboratory.        '''
         info.Description = '''
 For calculating real and resonant X-ray scattering factors to 250keV;       
 based on Fortran program of Cromer & Liberman corrected for 

@@ -7,25 +7,28 @@ import wx
 import Element
 import matplotlib as mpl
 import numpy
-# use the newer wxmpl when needed
-(main,sub) = mpl.__version__.split('.')[0:2]
-if int(main) > 0 or int(sub) > 91: 
-    import wxmpl131 as wxmpl
-else:
-    import wxmpl129a as wxmpl
-
+try:
+    import wxmpl
+except:
+    # use a copy provided here, select the newer wxmpl when needed
+    (main,sub) = mpl.__version__.split('.')[0:2]
+    if int(main) > 0 or int(sub) > 91: 
+        print "Loading pyFprime distributed wxmpl v1.3.1"
+        import wxmpl131 as wxmpl
+    else:
+        print "Loading pyFprime distributed wxmpl v1.2.9a"
+        import wxmpl129a as wxmpl
 import pylab
 import sys
 
+__version__ = '0.1.2'
 # print versions
-print "Available python module versions for pyFprime:"
+print "Installed python module versions in use in pyFprime v.",__version__,":"
 print "python:     ",sys.version[:5]
 print "wxpython:   ",wx.__version__
 print "matplotlib: ",mpl.__version__
 print "numpy:      ",numpy.__version__
 print "wxmpl:      ",wxmpl.__version__
-
-__version__ = '0.1.2'
 
 def create(parent):
     return Fprime(parent)

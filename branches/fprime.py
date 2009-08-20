@@ -61,7 +61,6 @@ class Fprime(wx.Frame):
     fppfignum = 2
     Energy = Kev/Wave
     ifWave = True
-    NewFPlot = True
     FFxaxis = 'S'      #default form factor plot is vs sin(theta)/lambda
     def _init_coll_ABOUT_Items(self, parent):
 
@@ -299,28 +298,25 @@ class Fprime(wx.Frame):
             self.fplot.canvas.mpl_connect('pick_event', self.OnPick)
             self.fplot.canvas.mpl_connect('button_release_event', self.OnRelease)
             self.fplot.canvas.mpl_connect('motion_notify_event', self.OnMotion)
-            self.NewFPlot = True
             newPlot = True
         ax = self.fplot.add_subplot(211)
         ax.clear()
-        ax.set_ylabel("f',"+' f", e-',fontsize=14)
-        if self.ifWave: 
-            ax.set_title(r'$\mathsf{wavelength, \AA}$',fontsize=14)
-            ax.set_xlim(self.Wmin,self.Wmax)
-            ax.axvline(x=Wave,picker=3)
-        else:
-            ax.set_title(r'$\mathsf{Energy, keV}$',fontsize=14)
-            ax.set_xscale('log')
-            ax.set_xlim(self.Kev/self.Wmax,self.Kev/self.Wmin)
-            ax.axvline(x=self.Kev/Wave,picker=3)
+        ax.set_ylabel("f ',"+' f ", e-',fontsize=14)
         Ymin = 0.0
         Ymax = 0.0
         if self.FPPS: 
             for Fpps in self.FPPS:
                 Ymin = min(Ymin,min(Fpps[2]),min(Fpps[3]))
                 Ymax = max(Ymax,max(Fpps[2]),max(Fpps[3]))
-                ax.plot(Fpps[1],Fpps[2],label=Fpps[0]+" f'")
-                ax.plot(Fpps[1],Fpps[3],label=Fpps[0]+' f"')
+                ax.plot(Fpps[1],Fpps[2],label=Fpps[0]+" f '")
+                ax.plot(Fpps[1],Fpps[3],label=Fpps[0]+' f "')
+        if self.ifWave: 
+            ax.set_title(r'$\mathsf{wavelength, \AA}$',fontsize=14)
+            ax.axvline(x=Wave,picker=3)
+        else:
+            ax.set_title(r'$\mathsf{Energy, keV}$',fontsize=14)
+            ax.set_xscale('log')
+            ax.axvline(x=self.Kev/Wave,picker=3)
         ax.set_ylim(Ymin,Ymax)
         legend = ax.legend(loc='best')
         bx = self.fplot.add_subplot(212)
@@ -331,7 +327,7 @@ class Fprime(wx.Frame):
             bx.set_xlabel(r'$\mathsf{2\theta}$',fontsize=14)
         else:
             bx.set_xlabel(r'$Q, \AA$',fontsize=14)
-        bx.set_ylabel("f+f', e-",fontsize=14)
+        bx.set_ylabel("f+f ', e-",fontsize=14)
         E = self.Energy
         DE = E*self.Eres                         #smear by defined source resolution
         StlMax = min(2.0,math.sin(80.0*math.pi/180.)/Wave)

@@ -7,6 +7,7 @@ import wx
 import Element
 import matplotlib as mpl
 import numpy
+
 try:
     import wxmpl
 except:
@@ -21,7 +22,7 @@ except:
 import pylab
 import sys
 
-__version__ = '0.1.2'
+__version__ = '0.1.3'
 # print versions
 print "Installed python module versions in use in pyFprime v.",__version__,":"
 print "python:     ",sys.version[:5]
@@ -29,6 +30,7 @@ print "wxpython:   ",wx.__version__
 print "matplotlib: ",mpl.__version__
 print "numpy:      ",numpy.__version__
 print "wxmpl:      ",wxmpl.__version__
+
 
 def create(parent):
     return Fprime(parent)
@@ -187,13 +189,6 @@ class Fprime(wx.Frame):
 
     def __init__(self, parent):
         self._init_ctrls(parent)
-        self.ffplot = pylab.figure(self.ffpfignum,facecolor='white')
-        self.fpplot = pylab.figure(self.fppfignum,facecolor='white')
-        self.ffplot.canvas.set_window_title('X-ray Form Factors')
-        self.fpplot.canvas.set_window_title('X-Ray Resonant Scattering Factors')
-        self.fpplot.canvas.mpl_connect('pick_event', self.OnPick)
-        self.fpplot.canvas.mpl_connect('button_release_event', self.OnRelease)
-        self.fpplot.canvas.mpl_connect('motion_notify_event', self.OnMotion)
         mpl.rcParams['axes.grid'] = True
         mpl.rcParams['legend.fontsize'] = 10
         self.Bind(wx.EVT_CLOSE, self.ExitMain)
@@ -294,8 +289,19 @@ class Fprime(wx.Frame):
         
     def UpDateFPPlot(self,Wave):
         """Plot f' & f" vs wavelength 0.05-3.0A"""
+        try:
+            self.fpplot.canvas.set_window_title('X-Ray Resonant Scattering Factors')
+            newPlot = False
+        except:
+            self.fpplot = pylab.figure(self.fppfignum,facecolor='white')
+            self.fpplot.canvas.set_window_title('X-Ray Resonant Scattering Factors')
+            self.fpplot.canvas.mpl_connect('pick_event', self.OnPick)
+            self.fpplot.canvas.mpl_connect('button_release_event', self.OnRelease)
+            self.fpplot.canvas.mpl_connect('motion_notify_event', self.OnMotion)
+            self.NewFPPlot = True
+            newPlot = True
         ax = self.fpplot.add_subplot(111)
-        if not self.NewFPPlot:
+        if not self.NewFPPlot and not newPlot:
             xlim = ax.get_xlim()
             ylim = ax.get_ylim()
         ax.clear()
@@ -326,7 +332,11 @@ class Fprime(wx.Frame):
             ax.set_ylim(ylim)
         ax.legend(loc='best',numpoints=2)
         pylab.figure(self.fppfignum)
-        pylab.draw()
+        if newPlot:
+            newPlot = False
+            pylab.show()
+        else:
+            pylab.draw()
         
     def OnPick(self, event):
         self.linePicked = event.artist
@@ -352,6 +362,13 @@ class Fprime(wx.Frame):
         "generate a set of form factor curves & plot them vs sin-theta/lambda or q or 2-theta"
         StlMax = math.sin(80.0*math.pi/180.)/self.Wave
         if StlMax > 2.0:StlMax = 2.0
+        try:
+            self.ffplot.canvas.set_window_title('X-ray Form Factors')
+            newPlot = False
+        except:
+            self.ffplot = pylab.figure(self.ffpfignum,facecolor='white')
+            self.ffplot.canvas.set_window_title('X-ray Form Factors')
+            newPlot = True
         Stl = pylab.arange(0.,StlMax,.01)
         ax = self.ffplot.add_subplot(111)
         ax.clear()
@@ -391,7 +408,11 @@ class Fprime(wx.Frame):
         ax.legend(loc='best',numpoints=2,)
         ax.set_ylim(0.0,Ymax+1.0)
         pylab.figure(self.ffpfignum)
-        pylab.draw()
+        if newPlot:
+            newPlot = False
+            pylab.show()
+        else:
+            pylab.draw()
 
     def SetWaveEnergy(self,Wave):
         self.Wave = Wave
@@ -431,7 +452,6 @@ class Fprime(wx.Frame):
         self.Results.Update()
         self.UpDateFPPlot(Wave)
         self.UpDateFFPlot()
-        pylab.show()
 
     def CalcFPPS(self):
         """generate set of f' & f" curves for selected elements
@@ -505,7 +525,6 @@ class Fprime(wx.Frame):
             self.slider1.SetToolTipString('Coarse control of energy')
         self.CalcFPPS()
         self.UpDateFPPlot(self.Wave)
-        pylab.show()
 
     def OnButton2(self, event):
         if event.GetEventObject().GetLabel() == "sin(theta)/lambda":
@@ -518,7 +537,6 @@ class Fprime(wx.Frame):
             event.GetEventObject().SetLabel("sin(theta)/lambda")
             self.FFxaxis = 'S'
         self.UpDateFFPlot()
-        pylab.show()
 
     def OnABOUTItems0Menu(self, event):
         info = wx.AboutDialogInfo()
@@ -537,3 +555,17 @@ Kissel & Pratt energy term; Jensen term not included
         '''
         wx.AboutBox(info)
 
+class FprimeApp(wx.App):
+    def OnInit(self):
+        self.main = Fprime(None)
+        self.main.Show()
+        self.SetTopWindow(self.main)
+        self.main.OnFPRIMENewMenu(None)
+        return True
+
+def main():
+    application = FprimeApp(0)
+    application.MainLoop()
+
+if __name__ == '__main__':
+    main()

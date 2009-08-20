@@ -61,7 +61,7 @@ class Fprime(wx.Frame):
     fppfignum = 2
     Energy = Kev/Wave
     ifWave = True
-    NewFPPlot = True
+    NewFPlot = True
     FFxaxis = 'S'      #default form factor plot is vs sin(theta)/lambda
     def _init_coll_ABOUT_Items(self, parent):
 
@@ -287,32 +287,29 @@ class Fprime(wx.Frame):
             Wave = self.Kev/(float(self.slider1.GetValue())/1000.)
         self.SetWaveEnergy(Wave)
         
-    def UpDateFPPlot(self,Wave):
+    def UpDateFPlot(self,Wave):
         """Plot f' & f" vs wavelength 0.05-3.0A"""
+        "generate a set of form factor curves & plot them vs sin-theta/lambda or q or 2-theta"
         try:
-            self.fpplot.canvas.set_window_title('X-Ray Resonant Scattering Factors')
+            self.fplot.canvas.set_window_title('X-Ray Resonant Scattering')
             newPlot = False
         except:
-            self.fpplot = pylab.figure(self.fppfignum,facecolor='white')
-            self.fpplot.canvas.set_window_title('X-Ray Resonant Scattering Factors')
-            self.fpplot.canvas.mpl_connect('pick_event', self.OnPick)
-            self.fpplot.canvas.mpl_connect('button_release_event', self.OnRelease)
-            self.fpplot.canvas.mpl_connect('motion_notify_event', self.OnMotion)
-            self.NewFPPlot = True
+            self.fplot = pylab.figure(facecolor='white')
+            self.fplot.canvas.set_window_title('X-Ray Resonant Scattering')
+            self.fplot.canvas.mpl_connect('pick_event', self.OnPick)
+            self.fplot.canvas.mpl_connect('button_release_event', self.OnRelease)
+            self.fplot.canvas.mpl_connect('motion_notify_event', self.OnMotion)
+            self.NewFPlot = True
             newPlot = True
-        ax = self.fpplot.add_subplot(111)
-        if not self.NewFPPlot and not newPlot:
-            xlim = ax.get_xlim()
-            ylim = ax.get_ylim()
+        ax = self.fplot.add_subplot(211)
         ax.clear()
-        ax.set_title('X-ray resonant scattering factors')
-        ax.set_ylabel("f',"+' f", e-',fontsize=12)
+        ax.set_ylabel("f',"+' f", e-',fontsize=14)
         if self.ifWave: 
-            ax.set_xlabel(r'$\mathsf{wavelength, \AA}$',fontsize=14)
+            ax.set_title(r'$\mathsf{wavelength, \AA}$',fontsize=14)
             ax.set_xlim(self.Wmin,self.Wmax)
             ax.axvline(x=Wave,picker=3)
         else:
-            ax.set_xlabel(r'$\mathsf{Energy, keV}$',fontsize=14)
+            ax.set_title(r'$\mathsf{Energy, keV}$',fontsize=14)
             ax.set_xscale('log')
             ax.set_xlim(self.Kev/self.Wmax,self.Kev/self.Wmin)
             ax.axvline(x=self.Kev/Wave,picker=3)
@@ -325,63 +322,20 @@ class Fprime(wx.Frame):
                 ax.plot(Fpps[1],Fpps[2],label=Fpps[0]+" f'")
                 ax.plot(Fpps[1],Fpps[3],label=Fpps[0]+' f"')
         ax.set_ylim(Ymin,Ymax)
-        if self.NewFPPlot:
-            self.NewFPPlot = False
-        else:
-            ax.set_xlim(xlim)
-            ax.set_ylim(ylim)
-        ax.legend(loc='best',numpoints=2)
-        pylab.figure(self.fppfignum)
-        if newPlot:
-            newPlot = False
-            pylab.show()
-        else:
-            pylab.draw()
-        
-    def OnPick(self, event):
-        self.linePicked = event.artist
-        
-    def OnMotion(self,event):
-        if self.linePicked:
-            xpos = event.xdata
-            if xpos and hasattr(self.fpplot.canvas,'SetToolTipString'):
-                self.fpplot.canvas.SetToolTipString('%9.3f'%(xpos))
-    def OnRelease(self, event):
-        if self.linePicked is None: return
-        xpos = event.xdata
-        if xpos:
-            if self.ifWave:
-                Wave = xpos
-            else:
-                Wave = self.Kev/xpos               
-            self.SetWaveEnergy(Wave)
-            
-        self.linePicked = None
-
-    def UpDateFFPlot(self):
-        "generate a set of form factor curves & plot them vs sin-theta/lambda or q or 2-theta"
-        StlMax = math.sin(80.0*math.pi/180.)/self.Wave
-        if StlMax > 2.0:StlMax = 2.0
-        try:
-            self.ffplot.canvas.set_window_title('X-ray Form Factors')
-            newPlot = False
-        except:
-            self.ffplot = pylab.figure(self.ffpfignum,facecolor='white')
-            self.ffplot.canvas.set_window_title('X-ray Form Factors')
-            newPlot = True
-        Stl = pylab.arange(0.,StlMax,.01)
-        ax = self.ffplot.add_subplot(111)
-        ax.clear()
-        ax.set_title('X-ray form factors')
+        legend = ax.legend(loc='best')
+        bx = self.fplot.add_subplot(212)
+        bx.clear()
         if self.FFxaxis == 'S':
-            ax.set_xlabel(r'$\mathsf{sin(\theta)/\lambda}$',fontsize=14)
+            bx.set_xlabel(r'$\mathsf{sin(\theta)/\lambda}$',fontsize=14)
         elif self.FFxaxis == 'T':
-            ax.set_xlabel(r'$\mathsf{2\theta}$',fontsize=14)
+            bx.set_xlabel(r'$\mathsf{2\theta}$',fontsize=14)
         else:
-            ax.set_xlabel(r'$Q, \AA$',fontsize=14)
-        ax.set_ylabel('f, e-',fontsize=12)
+            bx.set_xlabel(r'$Q, \AA$',fontsize=14)
+        bx.set_ylabel("f+f', e-",fontsize=14)
         E = self.Energy
         DE = E*self.Eres                         #smear by defined source resolution
+        StlMax = min(2.0,math.sin(80.0*math.pi/180.)/Wave)
+        Stl = pylab.arange(0.,StlMax,.01)
         Ymax = 0.0
         for Elem in self.Elems:
             Els = Elem[0]
@@ -404,15 +358,36 @@ class Fprime(wx.Frame):
                     X.append(360.0*math.asin(S*self.Wave)/math.pi)
                 else:
                     X.append(4.0*S*math.pi)
-            ax.plot(X,ff,label=Els)
-        ax.legend(loc='best',numpoints=2,)
-        ax.set_ylim(0.0,Ymax+1.0)
-        pylab.figure(self.ffpfignum)
+            bx.plot(X,ff,label=Els)
+        legend = bx.legend(loc='best')
+        bx.set_ylim(0.0,Ymax+1.0)
+        
         if newPlot:
             newPlot = False
             pylab.show()
         else:
             pylab.draw()
+        
+    def OnPick(self, event):
+        self.linePicked = event.artist
+        
+    def OnMotion(self,event):
+        if self.linePicked:
+            xpos = event.xdata
+            if xpos and hasattr(self.fplot.canvas,'SetToolTipString'):
+                self.fplot.canvas.SetToolTipString('%9.3f'%(xpos))
+                
+    def OnRelease(self, event):
+        if self.linePicked is None: return
+        self.linePicked = None
+        xpos = event.xdata
+        if xpos:
+            if self.ifWave:
+                Wave = xpos
+            else:
+                Wave = self.Kev/xpos               
+            self.SetWaveEnergy(Wave)
+            
 
     def SetWaveEnergy(self,Wave):
         self.Wave = Wave
@@ -450,8 +425,7 @@ class Fprime(wx.Frame):
                     ' f"=',(r1[1]+r2[1])/2.0,' mu=',(r1[2]+r2[2])/2.0)
         self.Results.SetValue(Text)
         self.Results.Update()
-        self.UpDateFPPlot(Wave)
-        self.UpDateFFPlot()
+        self.UpDateFPlot(Wave)
 
     def CalcFPPS(self):
         """generate set of f' & f" curves for selected elements
@@ -524,7 +498,7 @@ class Fprime(wx.Frame):
             self.SpinButton.SetToolTipString('Fine control of energy')
             self.slider1.SetToolTipString('Coarse control of energy')
         self.CalcFPPS()
-        self.UpDateFPPlot(self.Wave)
+        self.UpDateFPlot(self.Wave)
 
     def OnButton2(self, event):
         if event.GetEventObject().GetLabel() == "sin(theta)/lambda":
@@ -536,7 +510,7 @@ class Fprime(wx.Frame):
         else:
             event.GetEventObject().SetLabel("sin(theta)/lambda")
             self.FFxaxis = 'S'
-        self.UpDateFFPlot()
+        self.UpDateFPlot(self.Wave)
 
     def OnABOUTItems0Menu(self, event):
         info = wx.AboutDialogInfo()

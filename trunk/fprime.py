@@ -339,7 +339,9 @@ class Fprime(wx.Frame):
         StlMax = min(2.0,math.sin(80.0*math.pi/180.)/Wave)
         Stl = pylab.arange(0.,StlMax,.01)
         Ymax = 0.0
-        for Elem in self.Elems:
+        colors=['b','g','r','c','m','k']
+        for i,Elem in enumerate(self.Elems):
+            icol = i%6
             Els = Elem[0]
             Els = Els = Els.ljust(2).lower().capitalize()
             Ymax = max(Ymax,Elem[1])
@@ -352,15 +354,19 @@ class Fprime(wx.Frame):
             Els = Els.ljust(2).lower().capitalize()
             X = []
             ff = []
+            ffo = []
             for S in Stl: 
                 ff.append(Element.ScatFac(Elem[2],S)+res)
+                ffo.append(Element.ScatFac(Elem[2],S))
                 if self.FFxaxis == 'S':
                     X.append(S)
                 elif self.FFxaxis == 'T':
                     X.append(360.0*math.asin(S*self.Wave)/math.pi)
                 else:
                     X.append(4.0*S*math.pi)
-            bx.plot(X,ff,label=Els)
+            Color = colors[i]
+            bx.plot(X,ffo,Color+'--',label=Els+" f")
+            bx.plot(X,ff,Color,label=Els+" f+f'")
         legend = bx.legend(loc='best')
         bx.set_ylim(0.0,Ymax+1.0)
         

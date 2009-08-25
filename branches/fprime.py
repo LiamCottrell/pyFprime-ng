@@ -312,10 +312,10 @@ class Fprime(wx.Frame):
                 ax.plot(Fpps[1],Fpps[2],label=Fpps[0]+" f '")
                 ax.plot(Fpps[1],Fpps[3],label=Fpps[0]+' f "')
         if self.ifWave: 
-            ax.set_xlabel(r'$\mathsf{wavelength, \AA}$',fontsize=14)
+            ax.set_xlabel(r'$\mathsf{\lambda, \AA}$',fontsize=14)
             ax.axvline(x=Wave,picker=3)
         else:
-            ax.set_xlabel(r'$\mathsf{Energy, keV}$',fontsize=14)
+            ax.set_xlabel(r'$\mathsf{E, keV}$',fontsize=14)
             ax.set_xscale('log')
             ax.axvline(x=self.Kev/Wave,picker=3)
         ax.set_ylim(Ymin,Ymax)
@@ -323,7 +323,10 @@ class Fprime(wx.Frame):
         bx = self.fplot.add_subplot(212)
         self.fplot.subplots_adjust(hspace=0.25)
         bx.clear()
-        bx.set_title('Form factors',x=0,ha='left')
+        if self.ifWave:
+            bx.set_title('%s%s%6.4f%s'%('Form factors (',r'$\lambda=$',self.Wave,r'$\AA)$'),x=0,ha='left')
+        else:
+            bx.set_title('%s%6.2f%s'%('Form factors  (E =',self.Energy,'keV)'),x=0,ha='left')
         if self.FFxaxis == 'S':
             bx.set_xlabel(r'$\mathsf{sin(\theta)/\lambda}$',fontsize=14)
         elif self.FFxaxis == 'T':

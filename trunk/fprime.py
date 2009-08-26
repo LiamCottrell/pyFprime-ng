@@ -6,7 +6,7 @@ import math
 import wx
 import Element
 import matplotlib as mpl
-import numpy
+import numpy as np
 
 try:
     import wxmpl
@@ -28,7 +28,7 @@ print "Installed python module versions in use in pyFprime v.",__version__,":"
 print "python:     ",sys.version[:5]
 print "wxpython:   ",wx.__version__
 print "matplotlib: ",mpl.__version__
-print "numpy:      ",numpy.__version__
+print "numpy:      ",np.__version__
 print "wxmpl:      ",wxmpl.__version__
 
 
@@ -309,8 +309,11 @@ class Fprime(wx.Frame):
             for Fpps in self.FPPS:
                 Ymin = min(Ymin,min(Fpps[2]),min(Fpps[3]))
                 Ymax = max(Ymax,max(Fpps[2]),max(Fpps[3]))
-                ax.plot(Fpps[1],Fpps[2],label=Fpps[0]+" f '")
-                ax.plot(Fpps[1],Fpps[3],label=Fpps[0]+' f "')
+                fppsP1 = np.array(Fpps[1])
+                fppsP2 = np.array(Fpps[2])
+                fppsP3 = np.array(Fpps[3])
+                ax.plot(fppsP1,fppsP2,label=Fpps[0]+" f '")
+                ax.plot(fppsP1,fppsP3,label=Fpps[0]+' f "')
         if self.ifWave: 
             ax.set_xlabel(r'$\mathsf{\lambda, \AA}$',fontsize=14)
             ax.axvline(x=Wave,picker=3)
@@ -365,8 +368,11 @@ class Fprime(wx.Frame):
                 else:
                     X.append(4.0*S*math.pi)
             Color = colors[i]
-            bx.plot(X,ffo,Color+'--',label=Els+" f")
-            bx.plot(X,ff,Color,label=Els+" f+f'")
+            Xp = np.array(X)
+            ffop = np.array(ffo)
+            ffp = np.array(ff)
+            bx.plot(Xp,ffop,Color+'--',label=Els+" f")
+            bx.plot(Xp,ffp,Color,label=Els+" f+f'")
         legend = bx.legend(loc='best')
         bx.set_ylim(0.0,Ymax+1.0)
         

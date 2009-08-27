@@ -413,10 +413,11 @@ class DeleteElement(wx.Dialog):
         wx.Dialog.__init__(self, id=-1, name='Delete', parent=parent,
               pos=wx.DefaultPosition, size=wx.Size(max(128,64+l*24), 87),
               style=wx.DEFAULT_DIALOG_STYLE, title='Delete Element')
-        self.Show(True)
+        #self.Show(True)
         self.SetAutoLayout(True)
         self.SetHelpText('Select element to delete')
         self.SetWindowVariant(wx.WINDOW_VARIANT_SMALL)
+        self.CentreOnParent(wx.BOTH)
 
         i = 0
         Elem = []

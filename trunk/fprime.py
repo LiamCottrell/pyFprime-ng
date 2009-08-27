@@ -161,7 +161,7 @@ without arguments fprime uses CuKa as default (Wave=1.54052A, E=8.0478keV)
         self.Results = wx.TextCtrl( parent=panel,style=wx.TE_MULTILINE|wx.HSCROLL )
         self.Results.SetEditable(False)
         mainSizer.Add(self.Results,1,wx.ALIGN_CENTER_HORIZONTAL|wx.EXPAND)
-        mainSizer.Add((10,10),0)
+        mainSizer.Add((10,15),0)
 
         selSizer = wx.BoxSizer(wx.HORIZONTAL)
         selSizer.Add(wx.StaticText(parent=panel, label=' Wavelength:',
@@ -185,7 +185,7 @@ without arguments fprime uses CuKa as default (Wave=1.54052A, E=8.0478keV)
         slideSizer = wx.BoxSizer(wx.HORIZONTAL)
         self.SpinButton = wx.SpinButton(id=wxID_SPINBUTTON, parent=panel, 
               size=wx.Size(25,24), style=wx.SP_VERTICAL | wx.SP_ARROW_KEYS)
-        slideSizer.Add(self.SpinButton,0)
+        slideSizer.Add(self.SpinButton,0,wx.ALIGN_RIGHT)
         self.SpinButton.SetToolTipString('Fine control of wavelength')
         self.SpinButton.SetRange(int(10000.*self.Wmin),int(10000.*self.Wmax))
         self.SpinButton.SetValue(int(10000.*self.Wave))

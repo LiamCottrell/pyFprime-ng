@@ -158,7 +158,7 @@ without arguments fprime uses CuKa as default (Wave=1.54052A, E=8.0478keV)
         panel = wx.Panel(self)
 
         mainSizer = wx.BoxSizer(wx.VERTICAL)
-        self.Results = wx.TextCtrl( parent=panel,style=wx.TE_MULTILINE|wx.HSCROLL )
+        self.Results = wx.TextCtrl( parent=panel,style=wx.TE_MULTILINE|wx.TE_DONTWRAP )
         self.Results.SetEditable(False)
         mainSizer.Add(self.Results,1,wx.ALIGN_CENTER_HORIZONTAL|wx.EXPAND)
         mainSizer.Add((10,15),0)

@@ -5,8 +5,8 @@ import os
 import math
 import wx
 import Element
-import matplotlib as mpl
 import numpy as np
+import matplotlib as mpl
 
 try:
     import wxmpl
@@ -31,11 +31,10 @@ print "matplotlib: ",mpl.__version__
 print "numpy:      ",np.__version__
 print "wxmpl:      ",wxmpl.__version__
 
-
 def create(parent):
     return Fprime(parent)
 
-[wxID_FPRIME, wxID_FPRIMEBUTTON1, wxID_FPRIMEBUTTON2, wxID_SPINTEXT1, wxID_SPINTEXT2,
+[wxID_FPRIME, wxID_FPRIMECHOICE1, wxID_FPRIMECHOICE2, wxID_SPINTEXT1, wxID_SPINTEXT2,
  wxID_FPRIMERESULTS,wxID_FPRIMESLIDER1, wxID_SPINBUTTON,
 ] = [wx.NewId() for _init_ctrls in range(8)]
 
@@ -53,6 +52,21 @@ class Fprime(wx.Frame):
     Elems = []
     Wave = 1.5405      #CuKa default
     Kev = 12.397639    #keV for 1A x-rays
+    for arg in sys.argv:
+        if '-w' in arg:
+            Wave = float(arg.split('-w')[1])
+        elif '-e' in arg:
+            E = float(arg.split('-e')[1])
+            Wave = Kev/E
+        elif '-h' in arg:
+            print '''
+fprime.py can take the following arguments:
+-h   -  this help listing
+-wv  -  set default wavelength to v, e.g. -w1.54 sets wavelength to 1.54A
+-ev  -  set default energy to v, e.g. -e27 sets energy to 27keV
+without arguments fprime uses CuKa as default (Wave=1.54052A, E=8.0478keV)
+'''
+            sys.exit()
     Wmin = 0.05        #wavelength range
     Wmax = 3.0
     Wres = 0.004094    #plot resolution step size as const delta-lam/lam - gives 1000 steps for Wmin to Wmax
@@ -168,23 +182,24 @@ class Fprime(wx.Frame):
         self.SpinButton.Bind(wx.EVT_SPIN, self.OnSpinButton, id=wxID_SPINBUTTON)
 
         self.slider1 = wx.Slider(id=wxID_FPRIMESLIDER1, maxValue=int(1000.*self.Wmax),
-              minValue=int(1000.*self.Wmin), name='slider1', parent=self, pos=wx.Point(50,
-              225), size=wx.Size(550, 24), style=wx.SL_HORIZONTAL,
-              value=int(self.Wave*1000.), )
+            minValue=int(1000.*self.Wmin), name='slider1', parent=self, pos=wx.Point(50,
+            225), size=wx.Size(550, 24), style=wx.SL_HORIZONTAL,
+            value=int(self.Wave*1000.), )
         self.slider1.SetToolTipString('Coarse control of wavelength')
         self.slider1.Bind(wx.EVT_SLIDER, self.OnSlider1, id=wxID_FPRIMESLIDER1)
         
         wx.StaticText(parent=self, pos=wx.Point(50,257),label=' Plot scales:',size=wx.Size(75,15)).SetBackgroundColour('White')
 
-        self.button1 = wx.Button(id=wxID_FPRIMEBUTTON1, label='Wavelength',
-              name='button1', parent=self, pos=wx.Point(150, 255),style=0)
-        self.button1.SetToolTipString('Switch between wavelength and energy scale')
-        self.button1.Bind(wx.EVT_BUTTON, self.OnButton1, id=wxID_FPRIMEBUTTON1)
+        self.choice1 = wx.ComboBox(id=wxID_FPRIMECHOICE1, parent=self, value='Wavelength',
+             choices=['Wavelength','Energy'],pos=wx.Point(150, 255),style=wx.CB_READONLY|wx.CB_DROPDOWN)
+        self.choice1.SetToolTipString('Switch between wavelength and energy scale')
+        self.choice1.Bind(wx.EVT_COMBOBOX, self.OnChoice1, id=wxID_FPRIMECHOICE1)
 
-        self.button2 = wx.Button(id=wxID_FPRIMEBUTTON2, label='sin(theta)/lambda',
-              name='button2', parent=self, pos=wx.Point(250, 255), style=0)
-        self.button2.SetToolTipString('Switch between sin(theta)/lambda, q and 2-theta scale')
-        self.button2.Bind(wx.EVT_BUTTON, self.OnButton2, id=wxID_FPRIMEBUTTON2)
+        self.choice2 = wx.ComboBox(id=wxID_FPRIMECHOICE2, value='sin(theta)/lambda',
+            choices=['sin(theta)/lambda','2-theta','Q'],
+            parent=self, pos=wx.Point(250, 255), style=wx.CB_READONLY|wx.CB_DROPDOWN)
+        self.choice2.SetToolTipString('Switch between sin(theta)/lambda, q and 2-theta scale')
+        self.choice2.Bind(wx.EVT_COMBOBOX, self.OnChoice2, id=wxID_FPRIMECHOICE2)
 
     def __init__(self, parent):
         self._init_ctrls(parent)
@@ -426,17 +441,17 @@ class Fprime(wx.Frame):
             Els = Elem[0]
             Els = Els.ljust(2).lower().capitalize()
             if Elem[1] > 78 and self.Energy+DE > self.Kev/0.16:
-                Text += "%s\t%s%6s\t%s%6.3f  \t%s%10.2f \n" %    (
+                Text += "%s\t%s%6s\t%s%6.3f  \t%s%10.2f %s\n" %    (
                     'Element= '+str(Els)," f'=",'not valid',
-                    ' f"=',(r1[1]+r2[1])/2.0,' mu=',(r1[2]+r2[2])/2.0)
+                    ' f"=',(r1[1]+r2[1])/2.0,' mu=',(r1[2]+r2[2])/2.0,'barns/atom')
             elif Elem[1] > 94 and self.Energy-DE < self.Kev/2.67:
-                Text += "%s\t%s%6s\t%s%6s\t%s%10s\n" %    (
+                Text += "%s\t%s%6s\t%s%6s\t%s%10s%s\n" %    (
                     'Element= '+str(Els)," f'=",'not valid',
                     ' f"=','not valid',' mu=','not valid')
             else:
-                Text += "%s\t%s%6.3f   \t%s%6.3f  \t%s%10.2f \n" %    (
+                Text += "%s\t%s%6.3f   \t%s%6.3f  \t%s%10.2f %s\n" %    (
                     'Element= '+str(Els)," f'=",(r1[0]+r2[0])/2.0,
-                    ' f"=',(r1[1]+r2[1])/2.0,' mu=',(r1[2]+r2[2])/2.0)
+                    ' f"=',(r1[1]+r2[1])/2.0,' mu=',(r1[2]+r2[2])/2.0,'barns/atom')
         self.Results.SetValue(Text)
         self.Results.Update()
         self.UpDateFPlot(Wave)
@@ -482,9 +497,8 @@ class Fprime(wx.Frame):
                 wx.EndBusyCursor()
         self.FPPS = FPPS
 
-    def OnButton1(self, event):
-        if event.GetEventObject().GetLabel() == "Energy":
-            event.GetEventObject().SetLabel("Wavelength")
+    def OnChoice1(self, event):
+        if event.GetString() == "Wavelength":
             self.ifWave = True
             self.NewFPPlot = True
             self.Wave = round(self.Wave,4)
@@ -497,7 +511,6 @@ class Fprime(wx.Frame):
             self.SpinButton.SetToolTipString('Fine control of wavelength')
             self.slider1.SetToolTipString('Coarse control of wavelength')
         else:
-            event.GetEventObject().SetLabel("Energy")
             self.ifWave = False
             self.NewFPPlot = True
             Emin = self.Kev/self.Wmax
@@ -514,16 +527,13 @@ class Fprime(wx.Frame):
         self.CalcFPPS()
         self.UpDateFPlot(self.Wave)
 
-    def OnButton2(self, event):
-        if event.GetEventObject().GetLabel() == "sin(theta)/lambda":
-            event.GetEventObject().SetLabel("Q")
-            self.FFxaxis = 'Q'
-        elif event.GetEventObject().GetLabel() == 'Q':
-            event.GetEventObject().SetLabel('2-theta')
-            self.FFxaxis = 'T'
-        else:
-            event.GetEventObject().SetLabel("sin(theta)/lambda")
+    def OnChoice2(self, event):
+        if event.GetString() == "sin(theta)/lambda":
             self.FFxaxis = 'S'
+        elif event.GetString() == 'Q':
+            self.FFxaxis = 'Q'
+        else:
+            self.FFxaxis = 'T'
         self.UpDateFPlot(self.Wave)
 
     def OnABOUTItems0Menu(self, event):

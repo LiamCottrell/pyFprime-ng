@@ -165,7 +165,7 @@ without arguments fprime uses CuKa as default (Wave=1.54052A, E=8.0478keV)
 
         selSizer = wx.BoxSizer(wx.HORIZONTAL)
         selSizer.Add(wx.StaticText(parent=panel, label=' Wavelength:',
-            size=wx.Size(75,15)),0,wx.ALIGN_CENTER_VERTICAL)
+            size=wx.Size(80,15)),0,wx.ALIGN_CENTER_VERTICAL)
         self.SpinText1 = wx.TextCtrl(id=wxID_SPINTEXT1, parent=panel, 
               size=wx.Size(100,20), value = "%6.4f" % (self.Wave),style=wx.TE_PROCESS_ENTER )
         selSizer.Add(self.SpinText1,0)
@@ -173,7 +173,7 @@ without arguments fprime uses CuKa as default (Wave=1.54052A, E=8.0478keV)
         self.SpinText1.Bind(wx.EVT_TEXT_ENTER, self.OnSpinText1, id=wxID_SPINTEXT1)
         
         selSizer.Add(wx.StaticText(parent=panel, label=' Energy:',
-            size=wx.Size(75,15)),0,wx.ALIGN_CENTER_VERTICAL)
+            size=wx.Size(80,15)),0,wx.ALIGN_CENTER_VERTICAL)
         self.SpinText2 = wx.TextCtrl(id=wxID_SPINTEXT2, parent=panel, 
               size=wx.Size(100,20), value = "%7.4f" % (self.Energy),style=wx.TE_PROCESS_ENTER) 
         selSizer.Add(self.SpinText2,0)
@@ -202,7 +202,7 @@ without arguments fprime uses CuKa as default (Wave=1.54052A, E=8.0478keV)
         
         choiceSizer = wx.BoxSizer(wx.HORIZONTAL)
         choiceSizer.Add(wx.StaticText(parent=panel, label=' Plot scales:',
-            size=wx.Size(75,15)),0,wx.ALIGN_CENTER_VERTICAL)
+            size=wx.Size(80,15)),0,wx.ALIGN_CENTER_VERTICAL)
 
         self.choice1 = wx.ComboBox(id=wxID_FPRIMECHOICE1, parent=panel, value='Wavelength',
              choices=['Wavelength','Energy'],style=wx.CB_READONLY|wx.CB_DROPDOWN)

@@ -152,54 +152,74 @@ without arguments fprime uses CuKa as default (Wave=1.54052A, E=8.0478keV)
     def _init_ctrls(self, parent):
         # generated method, don't edit
         wx.Frame.__init__(self, id=wxID_FPRIME, name='Fprime', parent=parent,
-              size=wx.Size(650, 350),style=wx.DEFAULT_FRAME_STYLE, title='Fprime')              
+              size=wx.Size(500, 300),style=wx.DEFAULT_FRAME_STYLE, title='Fprime')              
         self._init_utils()
         self.SetMenuBar(self.menuBar1)
+        panel = wx.Panel(self)
 
-        self.Results = wx.TextCtrl(id=wxID_FPRIMERESULTS, name='Results',
-              parent=self, pos=wx.Point(25,25), size=wx.Size(600, 150),
-              style=wx.TE_MULTILINE, value='', )
+        mainSizer = wx.BoxSizer(wx.VERTICAL)
+        self.Results = wx.TextCtrl( parent=panel,style=wx.TE_MULTILINE|wx.HSCROLL )
         self.Results.SetEditable(False)
+        mainSizer.Add(self.Results,1,wx.ALIGN_CENTER_HORIZONTAL|wx.EXPAND)
+        mainSizer.Add((10,10),0)
 
-        self.SpinText1 = wx.TextCtrl(id=wxID_SPINTEXT1, parent=self, pos=wx.Point(25,200),
+        selSizer = wx.BoxSizer(wx.HORIZONTAL)
+        selSizer.Add(wx.StaticText(parent=panel, label=' Wavelength:',
+            size=wx.Size(75,15)),0,wx.ALIGN_CENTER_VERTICAL)
+        self.SpinText1 = wx.TextCtrl(id=wxID_SPINTEXT1, parent=panel, 
               size=wx.Size(100,20), value = "%6.4f" % (self.Wave),style=wx.TE_PROCESS_ENTER )
+        selSizer.Add(self.SpinText1,0)
         self.SpinText1.SetToolTipString('Enter desired wavelength')
         self.SpinText1.Bind(wx.EVT_TEXT_ENTER, self.OnSpinText1, id=wxID_SPINTEXT1)
-                
-        self.SpinText2 = wx.TextCtrl(id=wxID_SPINTEXT2, parent=self, pos=wx.Point(175,200),
-              size=wx.Size(100,20), value = "%7.4f" % (self.Energy),style=wx.TE_PROCESS_ENTER )
+        
+        selSizer.Add(wx.StaticText(parent=panel, label=' Energy:',
+            size=wx.Size(75,15)),0,wx.ALIGN_CENTER_VERTICAL)
+        self.SpinText2 = wx.TextCtrl(id=wxID_SPINTEXT2, parent=panel, 
+              size=wx.Size(100,20), value = "%7.4f" % (self.Energy),style=wx.TE_PROCESS_ENTER) 
+        selSizer.Add(self.SpinText2,0)
         self.SpinText2.SetToolTipString('Enter desired energy')
         self.SpinText2.Bind(wx.EVT_TEXT_ENTER, self.OnSpinText2, id=wxID_SPINTEXT2)
+        mainSizer.Add(selSizer,0)
+        mainSizer.Add((10,10),0)
         
-        wx.StaticText(parent=self, pos=wx.Point(25,180),label=' Wavelength:',size=wx.Size(80,15)).SetBackgroundColour('White')
-        wx.StaticText(parent=self, pos=wx.Point(175,180),label=' Energy:',size=wx.Size(75,15)).SetBackgroundColour('White')
-        
-        self.SpinButton = wx.SpinButton(id=wxID_SPINBUTTON, parent=self, pos=wx.Point(25,225),
-              name='SpinButton',size=wx.Size(25,24), style=wx.SP_VERTICAL | wx.SP_ARROW_KEYS)
+        slideSizer = wx.BoxSizer(wx.HORIZONTAL)
+        self.SpinButton = wx.SpinButton(id=wxID_SPINBUTTON, parent=panel, 
+              size=wx.Size(25,24), style=wx.SP_VERTICAL | wx.SP_ARROW_KEYS)
+        slideSizer.Add(self.SpinButton,0)
         self.SpinButton.SetToolTipString('Fine control of wavelength')
         self.SpinButton.SetRange(int(10000.*self.Wmin),int(10000.*self.Wmax))
         self.SpinButton.SetValue(int(10000.*self.Wave))
         self.SpinButton.Bind(wx.EVT_SPIN, self.OnSpinButton, id=wxID_SPINBUTTON)
 
         self.slider1 = wx.Slider(id=wxID_FPRIMESLIDER1, maxValue=int(1000.*self.Wmax),
-            minValue=int(1000.*self.Wmin), name='slider1', parent=self, pos=wx.Point(50,
-            225), size=wx.Size(550, 24), style=wx.SL_HORIZONTAL,
+            minValue=int(1000.*self.Wmin), parent=panel,style=wx.SL_HORIZONTAL,
             value=int(self.Wave*1000.), )
+        slideSizer.Add(self.slider1,1,wx.EXPAND|wx.ALIGN_RIGHT)
         self.slider1.SetToolTipString('Coarse control of wavelength')
         self.slider1.Bind(wx.EVT_SLIDER, self.OnSlider1, id=wxID_FPRIMESLIDER1)
+        mainSizer.Add(slideSizer,0,wx.EXPAND)
+        mainSizer.Add((10,10),0)
         
-        wx.StaticText(parent=self, pos=wx.Point(50,257),label=' Plot scales:',size=wx.Size(75,15)).SetBackgroundColour('White')
+        choiceSizer = wx.BoxSizer(wx.HORIZONTAL)
+        choiceSizer.Add(wx.StaticText(parent=panel, label=' Plot scales:',
+            size=wx.Size(75,15)),0,wx.ALIGN_CENTER_VERTICAL)
 
-        self.choice1 = wx.ComboBox(id=wxID_FPRIMECHOICE1, parent=self, value='Wavelength',
-             choices=['Wavelength','Energy'],pos=wx.Point(150, 255),style=wx.CB_READONLY|wx.CB_DROPDOWN)
+        self.choice1 = wx.ComboBox(id=wxID_FPRIMECHOICE1, parent=panel, value='Wavelength',
+             choices=['Wavelength','Energy'],style=wx.CB_READONLY|wx.CB_DROPDOWN)
+        choiceSizer.Add(self.choice1,0)
+        choiceSizer.Add((10,10),0)
         self.choice1.SetToolTipString('Switch between wavelength and energy scale')
         self.choice1.Bind(wx.EVT_COMBOBOX, self.OnChoice1, id=wxID_FPRIMECHOICE1)
 
         self.choice2 = wx.ComboBox(id=wxID_FPRIMECHOICE2, value='sin(theta)/lambda',
             choices=['sin(theta)/lambda','2-theta','Q'],
-            parent=self, pos=wx.Point(250, 255), style=wx.CB_READONLY|wx.CB_DROPDOWN)
+            parent=panel, style=wx.CB_READONLY|wx.CB_DROPDOWN)
+        choiceSizer.Add(self.choice2,0)
         self.choice2.SetToolTipString('Switch between sin(theta)/lambda, q and 2-theta scale')
         self.choice2.Bind(wx.EVT_COMBOBOX, self.OnChoice2, id=wxID_FPRIMECHOICE2)
+        mainSizer.Add(choiceSizer,0)
+        mainSizer.Add((10,10),0)
+        panel.SetSizer(mainSizer)
 
     def __init__(self, parent):
         self._init_ctrls(parent)

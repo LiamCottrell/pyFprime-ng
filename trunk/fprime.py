@@ -34,9 +34,9 @@ print "wxmpl:      ",wxmpl.__version__
 def create(parent):
     return Fprime(parent)
 
-[wxID_FPRIME, wxID_FPRIMECHOICE1, wxID_FPRIMECHOICE2, wxID_SPINTEXT1, wxID_SPINTEXT2,
+[wxID_FPRIMECHOICE1, wxID_FPRIMECHOICE2, wxID_SPINTEXT1, wxID_SPINTEXT2,
  wxID_FPRIMERESULTS,wxID_FPRIMESLIDER1, wxID_SPINBUTTON,
-] = [wx.NewId() for _init_ctrls in range(8)]
+] = [wx.NewId() for _init_ctrls in range(7)]
 
 [wxID_FPRIMEEXIT, wxID_FPRIMEDELETE, wxID_FPRIMENEW, 
 ] = [wx.NewId() for _init_coll_FPRIME_Items in range(3)]
@@ -120,8 +120,6 @@ without arguments fprime uses CuKa as default (Wave=1.54052A, E=8.0478keV)
         self.Bind(wx.EVT_MENU, self.OnKALPHAAgkaMenu, id=wxID_FPRIMEKALPHAAGKA)
 
     def _init_coll_FPRIME_Items(self, parent):
-        # generated method, don't edit
-
         parent.Append(help='Add new element', id=wxID_FPRIMENEW, kind=wx.ITEM_NORMAL,
               text='&New Element')
         self.Delete = parent.Append(help='Delete an element', id=wxID_FPRIMEDELETE, kind=wx.ITEM_NORMAL,
@@ -134,7 +132,6 @@ without arguments fprime uses CuKa as default (Wave=1.54052A, E=8.0478keV)
         self.Bind(wx.EVT_MENU, self.OnFPRIMEDeleteMenu, id=wxID_FPRIMEDELETE)
 
     def _init_utils(self):
-        # generated method, don't edit
         self.FPRIME = wx.Menu(title='')
 
         self.KALPHA = wx.Menu(title='')
@@ -150,8 +147,7 @@ without arguments fprime uses CuKa as default (Wave=1.54052A, E=8.0478keV)
         self._init_coll_menuBar1_Menus(self.menuBar1)
 
     def _init_ctrls(self, parent):
-        # generated method, don't edit
-        wx.Frame.__init__(self, id=wxID_FPRIME, name='Fprime', parent=parent,
+        wx.Frame.__init__(self, parent=parent,
               size=wx.Size(500, 300),style=wx.DEFAULT_FRAME_STYLE, title='Fprime')              
         self._init_utils()
         self.SetMenuBar(self.menuBar1)

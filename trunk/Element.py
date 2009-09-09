@@ -387,7 +387,7 @@ class PickElement(wx.Dialog):
         i=0
         for E in ElTable:
             PickElement.ElButton(self,name=E[0],
-            pos=wx.Point(E[1]*24+40,E[2]*24+24),tip=E[3],color=E[4])
+                pos=wx.Point(E[1]*24+40,E[2]*24+24),tip=E[3],color=E[4])
             i+=1
 
     def __init__(self, parent):

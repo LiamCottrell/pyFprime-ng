@@ -180,7 +180,7 @@ without arguments Absorb uses CuKa as default (Wave=1.54052A, E=8.0478keV)
             compSizer = wx.FlexGridSizer(nRow+1,10,0,0)
             for Elem in self.Elems:
                 compSizer.Add(wx.StaticText(parent=self.panel,label="  "+Elem[0].capitalize(),
-                    size=wx.Size(25,20)),0,wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_RIGHT)
+                    size=wx.Size(30,20)),0,wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_RIGHT)
                 numElem = wx.TextCtrl(id=wxID_NUMELEM,parent=self.panel,name=Elem[0],
                     size=wx.Size(70,20),value="%8.2f" % (Elem[2]),style=wx.TE_PROCESS_ENTER)
                 compSizer.Add(numElem,0)

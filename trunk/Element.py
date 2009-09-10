@@ -44,6 +44,33 @@ def GetFormFactorCoeff(El):
     FFdata.close()
     return FormFactors
         
+def GetAtomInfo(El):
+    ElS = El.upper().rjust(2)
+    filename = os.path.join(sys.path[0],'atmdata.dat')
+    try:
+        FFdata = open(filename,'Ur')
+    except:
+        wx.MessageBox(message="File atmdata.dat not found in directory %s" % sys.path[0],
+            caption="No atmdata.dat file",style=wx.OK | wx.ICON_EXCLAMATION | wx.STAY_ON_TOP)
+        sys.exit()
+    S = '1'
+    AtomInfo = {}
+    Mass = []
+    while S:
+        S = FFdata.readline()
+        if S[3:5] == ElS:
+            if S[5:6] == '_':
+                if not Mass:                                 #picks 1st one; natural abundance or 1st isotope
+                    Mass = float(S[10:19])
+                if S[5:9] == '_SIZ':
+                    Z=int(S[:2])
+                    Symbol = S[3:5].strip()
+                    Drad = float(S[12:22])
+                    Arad = float(S[22:32])
+    FFdata.close()
+    AtomInfo={'Symbol':Symbol,'Mass':Mass,'Z':Z,'Drad':Drad,'Arad':Arad}    
+    return AtomInfo
+      
 def GetXsectionCoeff(El):
     """Read atom orbital scattering cross sections for fprime calculations via Cromer-Lieberman algorithm
     Input - El: 2 character element symbol

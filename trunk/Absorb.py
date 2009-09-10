@@ -195,7 +195,7 @@ without arguments Absorb uses CuKa as default (Wave=1.54052A, E=8.0478keV)
             wx.ALIGN_CENTER_VERTICAL|wx.EXPAND)
         selSizer.Add((5,10),0)
         self.SpinText1 = wx.TextCtrl(id=wxID_SPINTEXT1, parent=self.panel, 
-              size=wx.Size(100,20), value = "%6.4f" % (self.Wave),style=wx.TE_PROCESS_ENTER )
+            size=wx.Size(100,20), value = "%6.4f" % (self.Wave),style=wx.TE_PROCESS_ENTER )
         selSizer.Add(self.SpinText1,0)
         selSizer.Add((5,10),0)
         self.SpinText1.SetToolTipString('Enter desired wavelength')
@@ -205,7 +205,7 @@ without arguments Absorb uses CuKa as default (Wave=1.54052A, E=8.0478keV)
             wx.ALIGN_CENTER_VERTICAL|wx.EXPAND)
         selSizer.Add((5,10),0)
         self.SpinText2 = wx.TextCtrl(id=wxID_SPINTEXT2, parent=self.panel, 
-              size=wx.Size(100,20), value = "%7.4f" % (self.Energy),style=wx.TE_PROCESS_ENTER) 
+            size=wx.Size(100,20), value = "%7.4f" % (self.Energy),style=wx.TE_PROCESS_ENTER) 
         selSizer.Add(self.SpinText2,0)
         selSizer.Add((5,10),0)
         self.SpinText2.SetToolTipString('Enter desired energy')
@@ -315,6 +315,7 @@ without arguments Absorb uses CuKa as default (Wave=1.54052A, E=8.0478keV)
         if PE.ShowModal() == wx.ID_OK:
             ElemSym = PE.Elem.strip().upper()
             if ElemSym not in ElList:
+                atomData = Element.GetAtomInfo(ElemSym)
                 FormFactors = Element.GetFormFactorCoeff(ElemSym)
                 for FormFac in FormFactors:
                     FormSym = FormFac['Symbol'].strip()
@@ -322,7 +323,7 @@ without arguments Absorb uses CuKa as default (Wave=1.54052A, E=8.0478keV)
                         Z = FormFac['Z']                #At. No.
                         N = 1.                          #no atoms / formula unit
                         Orbs = Element.GetXsectionCoeff(ElemSym)
-                        Elem += (ElemSym,Z,N,FormFac,Orbs)
+                        Elem += (ElemSym,Z,N,FormFac,Orbs,atomData)
                 Absorb.Elems.append(Elem)
             self.Delete.Enable(True)
             self.panel.Destroy()
@@ -442,7 +443,9 @@ without arguments Absorb uses CuKa as default (Wave=1.54052A, E=8.0478keV)
             for Elem in self.Elems:
                 self.Volume += 10.*Elem[2]
         muT = 0
+        Mass = 0
         for Elem in self.Elems:
+            Mass += self.Zcell*Elem[2]*Elem[5]['Mass']
             r1 = Element.FPcalc(Elem[4],E+DE)
             r2 = Element.FPcalc(Elem[4],E-DE)
             Els = Elem[0]
@@ -464,9 +467,14 @@ without arguments Absorb uses CuKa as default (Wave=1.54052A, E=8.0478keV)
                     'Element= '+str(Els),"N = ",Elem[2]," f'=",(r1[0]+r2[0])/2.0,
                     ' f"=',(r1[1]+r2[1])/2.0,' mu=',mu,'barns')
             muT += mu
+        
         Text += "%s %s%10.2f %s\n" % ("Total",' mu=',self.Pack*muT/self.Volume,'cm-1')
         self.Results.SetValue(Text)
-        Text += "%s %s%10.2f\n" % ("Total",' muR=',self.Radius*self.Pack*muT/(10.0*self.Volume))
+        Text += "%s%10.2f" % ('Total muR=',self.Radius*self.Pack*muT/(10.0*self.Volume))                
+        if self.ifVol:
+            Text += '%s%6.3f %s\n' % (', Theor. density=',Mass/(0.602*self.Volume),'g/cm^3')
+        else:  
+            Text += '%s%6.3f %s\n' % (', Est. density=',Mass/(0.602*self.Volume),'g/cm^3')
         self.Results.SetValue(Text)
         self.Results.Update()
         self.SpinText3.SetValue(str(self.Volume))

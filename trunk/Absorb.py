@@ -572,7 +572,7 @@ without arguments Absorb uses CuKa as default (Wave=1.54052A, E=8.0478keV)
             newPlot = True
         ax = self.fplot.add_subplot(111)
         ax.clear()
-        ax.set_title('Absorption',x=0,ha='left')
+        ax.set_title('X-Ray Absorption',x=0,ha='left')
         ax.set_ylabel(r"$\mu R$",fontsize=14)
         Ymin = 0.0
         Ymax = 0.0

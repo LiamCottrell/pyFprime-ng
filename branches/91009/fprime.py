@@ -241,7 +241,7 @@ without arguments fprime uses CuKa as default (Wave=1.54052A, E=8.0478keV)
     def OnFPRIMENewMenu(self, event):
         ElList = []
         for Elem in self.Elems: ElList.append(Elem[0])
-        PE = Element.PickElement(self)
+        PE = Element.PickElement(self,ElList)
         if PE.ShowModal() == wx.ID_OK:
             for El in PE.Elem:
                 ElemSym = El.strip().upper()
@@ -361,7 +361,8 @@ without arguments fprime uses CuKa as default (Wave=1.54052A, E=8.0478keV)
             ax.set_xscale('log')
             ax.axvline(x=self.Kev/Wave,picker=3,color='black')
         ax.set_ylim(Ymin,Ymax)
-        legend = ax.legend(loc='best')
+        if self.FPPS:
+            legend = ax.legend(loc='best')
         bx = self.fplot.add_subplot(212)
         self.fplot.subplots_adjust(hspace=0.25)
         bx.clear()
@@ -410,7 +411,8 @@ without arguments fprime uses CuKa as default (Wave=1.54052A, E=8.0478keV)
             ffp = np.array(ff)
             bx.plot(Xp,ffop,Color+'--',label=Els+" f")
             bx.plot(Xp,ffp,Color,label=Els+" f+f'")
-        legend = bx.legend(loc='best')
+        if self.Elems:
+            legend = bx.legend(loc='best')
         bx.set_ylim(0.0,Ymax+1.0)
         
         if newPlot:

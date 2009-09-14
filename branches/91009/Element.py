@@ -297,7 +297,7 @@ def FPcalc(Orbs, KEv):
 class PickElement(wx.Dialog):
     "Makes periodic table widget for picking element - caller maintains element list"
     Elem = []
-    def _init_ctrls(self, prnt):
+    def _init_ctrls(self, prnt,list):
         wx.Dialog.__init__(self, id=-1, name='PickElement',
               parent=prnt, pos=wx.DefaultPosition, size=wx.Size(520, 310),
               style=wx.DEFAULT_DIALOG_STYLE, title='Pick Element')
@@ -311,9 +311,12 @@ class PickElement(wx.Dialog):
         SemMetcolor = wx.Colour(128, 255, 0)
         NonMetcolor = wx.Colour(0, 255, 255)
         White = wx.Colour(255, 255, 255)
+        self.Elem = []
+        for El in list:
+            self.Elem.append(El.lower().capitalize())
 
         
-        ElTable = [
+        self.ElTable = [
             ("H",   0,0, "Hydrogen",    White,           0.0000),
             ("He", 17,0, "Helium",      Noblecolor,      0.0000),
             ("Li",  0,1, "Lithium",     Alkcolor,        0.0004),
@@ -417,7 +420,7 @@ class PickElement(wx.Dialog):
         elPanel = wx.Panel(panel)
             
         i=0
-        for E in ElTable:
+        for E in self.ElTable:
             PickElement.ElButton(self,parent=elPanel,name=E[0],
                 pos=wx.Point(E[1]*24+40,E[2]*24+24),tip=E[3],color=E[4])
             i+=1
@@ -447,14 +450,14 @@ class PickElement(wx.Dialog):
     def OnCancel(self,event):
         self.EndModal(wx.ID_CANCEL)        
 
-    def __init__(self, parent):
-        self._init_ctrls(parent)
+    def __init__(self, parent,list):
+        self._init_ctrls(parent,list)
         
     def ElButton(self, parent, name, pos, tip, color):
         Black = wx.Colour(0,0,0)
         if name in self.Elem:
             color = Black
-        El = wx.Button(label=name, parent=parent,
+        El = wscs.ColourSelect(label=name, parent=parent,colour=color,
             pos=pos, size=wx.Size(24, 23), style=wx.RAISED_BORDER)
         El.SetBackgroundColour(color)
         El.SetLabel(name)
@@ -462,14 +465,19 @@ class PickElement(wx.Dialog):
         El.Bind(wx.EVT_BUTTON, self.OnElButton)
 
     def OnElButton(self, event):
+        Black = wx.Colour(0,0,0)
         btn = event.GetEventObject()
         El = btn.GetLabel()
-        if El in self.Elem:
-            btn.SetForegroundColour(wx.Colour(0,0,0))
-            self.Elem.remove(El)
-        else:
-            btn.SetForegroundColour(wx.Colour(255,0,0))
-            self.Elem.append(El)
+        if btn.GetColour() != Black:
+            for Elem in self.ElTable:
+                if El in Elem:
+                    ElColor = Elem[4]
+            if El in self.Elem:
+                btn.SetColour(ElColor)
+                self.Elem.remove(El)
+            else:
+                btn.SetColour(wx.Colour(255,0,0))
+                self.Elem.append(El)
         
 class DeleteElement(wx.Dialog):
     "Delete element from selected set widget"
@@ -478,7 +486,6 @@ class DeleteElement(wx.Dialog):
         wx.Dialog.__init__(self, id=-1, name='Delete', parent=parent,
               pos=wx.DefaultPosition, size=wx.Size(max(128,64+l*24), 87),
               style=wx.DEFAULT_DIALOG_STYLE, title='Delete Element')
-        #self.Show(True)
         self.SetAutoLayout(True)
         self.SetHelpText('Select element to delete')
         self.SetWindowVariant(wx.WINDOW_VARIANT_SMALL)

@@ -308,23 +308,23 @@ without arguments Absorb uses CuKa as default (Wave=1.54052A, E=8.0478keV)
         self.Close()
 
     def OnNewMenu(self, event):
-        PE = Element.PickElement(self)
         ElList = []
         for Elem in self.Elems: ElList.append(Elem[0])
-        Elem = []
+        PE = Element.PickElement(self)
         if PE.ShowModal() == wx.ID_OK:
-            ElemSym = PE.Elem.strip().upper()
-            if ElemSym not in ElList:
-                atomData = Element.GetAtomInfo(ElemSym)
-                FormFactors = Element.GetFormFactorCoeff(ElemSym)
-                for FormFac in FormFactors:
-                    FormSym = FormFac['Symbol'].strip()
-                    if FormSym == ElemSym:
-                        Z = FormFac['Z']                #At. No.
-                        N = 1.                          #no atoms / formula unit
-                        Orbs = Element.GetXsectionCoeff(ElemSym)
-                        Elem += (ElemSym,Z,N,FormFac,Orbs,atomData)
-                Absorb.Elems.append(Elem)
+            for El in PE.Elem:
+                ElemSym = El.strip().upper()
+                if ElemSym not in ElList:
+                    atomData = Element.GetAtomInfo(ElemSym)
+                    FormFactors = Element.GetFormFactorCoeff(ElemSym)
+                    for FormFac in FormFactors:
+                        FormSym = FormFac['Symbol'].strip()
+                        if FormSym == ElemSym:
+                            Z = FormFac['Z']                #At. No.
+                            N = 1.                          #no atoms / formula unit
+                            Orbs = Element.GetXsectionCoeff(ElemSym)
+                            Elem = [ElemSym,Z,N,FormFac,Orbs,atomData]
+                    Absorb.Elems.append(Elem)
             self.Delete.Enable(True)
             self.panel.Destroy()
             self.DrawPanel()
@@ -585,11 +585,13 @@ without arguments Absorb uses CuKa as default (Wave=1.54052A, E=8.0478keV)
                 ax.plot(fppsP1,fppsP2,label=r'$\mu R$ '+Fpps[0])
         if self.ifWave: 
             ax.set_xlabel(r'$\mathsf{\lambda, \AA}$',fontsize=14)
-            ax.axvline(x=Wave,picker=3)
+            ax.axvline(x=Wave,picker=3,color='black')
         else:
             ax.set_xlabel(r'$\mathsf{E, keV}$',fontsize=14)
             ax.set_xscale('log')
-            ax.axvline(x=self.Kev/Wave,picker=3)
+            ax.axvline(x=self.Kev/Wave,picker=3,color='black')
+        ax.axhline(y=1.0,color='b')
+        ax.axhline(y=5.0,color='r')
         ax.set_ylim(Ymin,Ymax)
         legend = ax.legend(loc='best')
         

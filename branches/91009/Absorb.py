@@ -310,7 +310,7 @@ without arguments Absorb uses CuKa as default (Wave=1.54052A, E=8.0478keV)
     def OnNewMenu(self, event):
         ElList = []
         for Elem in self.Elems: ElList.append(Elem[0])
-        PE = Element.PickElement(self)
+        PE = Element.PickElement(self,ElList)
         if PE.ShowModal() == wx.ID_OK:
             for El in PE.Elem:
                 ElemSym = El.strip().upper()
@@ -324,7 +324,7 @@ without arguments Absorb uses CuKa as default (Wave=1.54052A, E=8.0478keV)
                             N = 1.                          #no atoms / formula unit
                             Orbs = Element.GetXsectionCoeff(ElemSym)
                             Elem = [ElemSym,Z,N,FormFac,Orbs,atomData]
-                    Absorb.Elems.append(Elem)
+                    self.Elems.append(Elem)
             self.Delete.Enable(True)
             self.panel.Destroy()
             self.DrawPanel()
@@ -342,7 +342,7 @@ without arguments Absorb uses CuKa as default (Wave=1.54052A, E=8.0478keV)
                 for Elem in self.Elems:
                     if Elem[0] != El:
                         S.append(Elem)
-                Absorb.Elems = S
+                self.Elems = S
                 self.CalcFPPS()
                 if not self.Elems:
                     self.Delete.Enable(False)
@@ -468,14 +468,15 @@ without arguments Absorb uses CuKa as default (Wave=1.54052A, E=8.0478keV)
                     ' f"=',(r1[1]+r2[1])/2.0,' mu=',mu,'barns')
             muT += mu
         
-        Text += "%s %s%10.2f %s\n" % ("Total",' mu=',self.Pack*muT/self.Volume,'cm-1')
-        self.Results.SetValue(Text)
-        Text += "%s%10.2f" % ('Total muR=',self.Radius*self.Pack*muT/(10.0*self.Volume))                
-        if self.ifVol:
-            Text += '%s%6.3f %s\n' % (', Theor. density=',Mass/(0.602*self.Volume),'g/cm^3')
-        else:  
-            Text += '%s%6.3f %s\n' % (', Est. density=',Mass/(0.602*self.Volume),'g/cm^3')
-        self.Results.SetValue(Text)
+        if self.Volume:
+            Text += "%s %s%10.2f %s\n" % ("Total",' mu=',self.Pack*muT/self.Volume,'cm-1')
+            self.Results.SetValue(Text)
+            Text += "%s%10.2f" % ('Total muR=',self.Radius*self.Pack*muT/(10.0*self.Volume))                
+            if self.ifVol:
+                Text += '%s%6.3f %s\n' % (', Theor. density=',Mass/(0.602*self.Volume),'g/cm^3')
+            else:  
+                Text += '%s%6.3f %s\n' % (', Est. density=',Mass/(0.602*self.Volume),'g/cm^3')
+            self.Results.SetValue(Text)
         self.Results.Update()
         self.SpinText3.SetValue(str(self.Volume))
         self.SpinText3.Update()
@@ -593,7 +594,8 @@ without arguments Absorb uses CuKa as default (Wave=1.54052A, E=8.0478keV)
         ax.axhline(y=1.0,color='b')
         ax.axhline(y=5.0,color='r')
         ax.set_ylim(Ymin,Ymax)
-        legend = ax.legend(loc='best')
+        if self.FPPS:
+            legend = ax.legend(loc='best')
         
         if newPlot:
             newPlot = False

@@ -22,7 +22,7 @@ except:
 import pylab
 import sys
 
-__version__ = '0.0.1'
+__version__ = '0.1.0'
 # print versions
 print "Installed python module versions in use in Absorb v.",__version__,":"
 print "python:     ",sys.version[:5]

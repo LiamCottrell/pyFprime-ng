@@ -22,7 +22,7 @@ except:
 import pylab
 import sys
 
-__version__ = '0.0.1'
+__version__ = '0.1.0'
 # print versions
 print "Installed python module versions in use in Absorb v.",__version__,":"
 print "python:     ",sys.version[:5]
@@ -308,23 +308,23 @@ without arguments Absorb uses CuKa as default (Wave=1.54052A, E=8.0478keV)
         self.Close()
 
     def OnNewMenu(self, event):
-        PE = Element.PickElement(self)
         ElList = []
         for Elem in self.Elems: ElList.append(Elem[0])
-        Elem = []
+        PE = Element.PickElement(self,ElList)
         if PE.ShowModal() == wx.ID_OK:
-            ElemSym = PE.Elem.strip().upper()
-            if ElemSym not in ElList:
-                atomData = Element.GetAtomInfo(ElemSym)
-                FormFactors = Element.GetFormFactorCoeff(ElemSym)
-                for FormFac in FormFactors:
-                    FormSym = FormFac['Symbol'].strip()
-                    if FormSym == ElemSym:
-                        Z = FormFac['Z']                #At. No.
-                        N = 1.                          #no atoms / formula unit
-                        Orbs = Element.GetXsectionCoeff(ElemSym)
-                        Elem += (ElemSym,Z,N,FormFac,Orbs,atomData)
-                Absorb.Elems.append(Elem)
+            for El in PE.Elem:
+                ElemSym = El.strip().upper()
+                if ElemSym not in ElList:
+                    atomData = Element.GetAtomInfo(ElemSym)
+                    FormFactors = Element.GetFormFactorCoeff(ElemSym)
+                    for FormFac in FormFactors:
+                        FormSym = FormFac['Symbol'].strip()
+                        if FormSym == ElemSym:
+                            Z = FormFac['Z']                #At. No.
+                            N = 1.                          #no atoms / formula unit
+                            Orbs = Element.GetXsectionCoeff(ElemSym)
+                            Elem = [ElemSym,Z,N,FormFac,Orbs,atomData]
+                    self.Elems.append(Elem)
             self.Delete.Enable(True)
             self.panel.Destroy()
             self.DrawPanel()
@@ -342,7 +342,7 @@ without arguments Absorb uses CuKa as default (Wave=1.54052A, E=8.0478keV)
                 for Elem in self.Elems:
                     if Elem[0] != El:
                         S.append(Elem)
-                Absorb.Elems = S
+                self.Elems = S
                 self.CalcFPPS()
                 if not self.Elems:
                     self.Delete.Enable(False)
@@ -468,14 +468,15 @@ without arguments Absorb uses CuKa as default (Wave=1.54052A, E=8.0478keV)
                     ' f"=',(r1[1]+r2[1])/2.0,' mu=',mu,'barns')
             muT += mu
         
-        Text += "%s %s%10.2f %s\n" % ("Total",' mu=',self.Pack*muT/self.Volume,'cm-1')
-        self.Results.SetValue(Text)
-        Text += "%s%10.2f" % ('Total muR=',self.Radius*self.Pack*muT/(10.0*self.Volume))                
-        if self.ifVol:
-            Text += '%s%6.3f %s\n' % (', Theor. density=',Mass/(0.602*self.Volume),'g/cm^3')
-        else:  
-            Text += '%s%6.3f %s\n' % (', Est. density=',Mass/(0.602*self.Volume),'g/cm^3')
-        self.Results.SetValue(Text)
+        if self.Volume:
+            Text += "%s %s%10.2f %s\n" % ("Total",' mu=',self.Pack*muT/self.Volume,'cm-1')
+            self.Results.SetValue(Text)
+            Text += "%s%10.2f" % ('Total muR=',self.Radius*self.Pack*muT/(10.0*self.Volume))                
+            if self.ifVol:
+                Text += '%s%6.3f %s\n' % (', Theor. density=',Mass/(0.602*self.Volume),'g/cm^3')
+            else:  
+                Text += '%s%6.3f %s\n' % (', Est. density=',Mass/(0.602*self.Volume),'g/cm^3')
+            self.Results.SetValue(Text)
         self.Results.Update()
         self.SpinText3.SetValue(str(self.Volume))
         self.SpinText3.Update()
@@ -585,13 +586,16 @@ without arguments Absorb uses CuKa as default (Wave=1.54052A, E=8.0478keV)
                 ax.plot(fppsP1,fppsP2,label=r'$\mu R$ '+Fpps[0])
         if self.ifWave: 
             ax.set_xlabel(r'$\mathsf{\lambda, \AA}$',fontsize=14)
-            ax.axvline(x=Wave,picker=3)
+            ax.axvline(x=Wave,picker=3,color='black')
         else:
             ax.set_xlabel(r'$\mathsf{E, keV}$',fontsize=14)
             ax.set_xscale('log')
-            ax.axvline(x=self.Kev/Wave,picker=3)
+            ax.axvline(x=self.Kev/Wave,picker=3,color='black')
+        ax.axhline(y=1.0,color='b')
+        ax.axhline(y=5.0,color='r')
         ax.set_ylim(Ymin,Ymax)
-        legend = ax.legend(loc='best')
+        if self.FPPS:
+            legend = ax.legend(loc='best')
         
         if newPlot:
             newPlot = False

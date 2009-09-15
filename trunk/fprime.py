@@ -22,7 +22,7 @@ except:
 import pylab
 import sys
 
-__version__ = '0.1.3'
+__version__ = '0.2.0'
 # print versions
 print "Installed python module versions in use in pyFprime v.",__version__,":"
 print "python:     ",sys.version[:5]
@@ -239,21 +239,21 @@ without arguments fprime uses CuKa as default (Wave=1.54052A, E=8.0478keV)
         self.Close()
 
     def OnFPRIMENewMenu(self, event):
-        PE = Element.PickElement(self)
         ElList = []
         for Elem in self.Elems: ElList.append(Elem[0])
-        Elem = ()
+        PE = Element.PickElement(self,ElList)
         if PE.ShowModal() == wx.ID_OK:
-            ElemSym = PE.Elem.strip().upper()
-            if ElemSym not in ElList:
-                FormFactors = Element.GetFormFactorCoeff(ElemSym)
-                for FormFac in FormFactors:
-                    FormSym = FormFac['Symbol'].strip()
-                    if FormSym == ElemSym:
-                        Z = FormFac['Z']
-                        Orbs = Element.GetXsectionCoeff(ElemSym)
-                        Elem += (ElemSym,Z,FormFac,Orbs)
-                Fprime.Elems.append(Elem)
+            for El in PE.Elem:
+                ElemSym = El.strip().upper()
+                if ElemSym not in ElList:
+                    FormFactors = Element.GetFormFactorCoeff(ElemSym)
+                    for FormFac in FormFactors:
+                        FormSym = FormFac['Symbol'].strip()
+                        if FormSym == ElemSym:
+                            Z = FormFac['Z']                #At. No.
+                            Orbs = Element.GetXsectionCoeff(ElemSym)
+                            Elem = (ElemSym,Z,FormFac,Orbs)
+                    Fprime.Elems.append(Elem)
             self.Delete.Enable(True)
             self.CalcFPPS()
             self.SetWaveEnergy(Fprime.Wave)
@@ -342,24 +342,27 @@ without arguments fprime uses CuKa as default (Wave=1.54052A, E=8.0478keV)
         ax.set_ylabel("f ',"+' f ", e-',fontsize=14)
         Ymin = 0.0
         Ymax = 0.0
+        colors=['r','b','g','c','m','k']
         if self.FPPS: 
-            for Fpps in self.FPPS:
+            for i,Fpps in enumerate(self.FPPS):
+                Color = colors[i%6]
                 Ymin = min(Ymin,min(Fpps[2]),min(Fpps[3]))
                 Ymax = max(Ymax,max(Fpps[2]),max(Fpps[3]))
                 fppsP1 = np.array(Fpps[1])
                 fppsP2 = np.array(Fpps[2])
                 fppsP3 = np.array(Fpps[3])
-                ax.plot(fppsP1,fppsP2,label=Fpps[0]+" f '")
-                ax.plot(fppsP1,fppsP3,label=Fpps[0]+' f "')
+                ax.plot(fppsP1,fppsP2,Color,label=Fpps[0]+" f '")
+                ax.plot(fppsP1,fppsP3,Color,label=Fpps[0]+' f "')
         if self.ifWave: 
             ax.set_xlabel(r'$\mathsf{\lambda, \AA}$',fontsize=14)
-            ax.axvline(x=Wave,picker=3)
+            ax.axvline(x=Wave,picker=3,color='black')
         else:
             ax.set_xlabel(r'$\mathsf{E, keV}$',fontsize=14)
             ax.set_xscale('log')
-            ax.axvline(x=self.Kev/Wave,picker=3)
+            ax.axvline(x=self.Kev/Wave,picker=3,color='black')
         ax.set_ylim(Ymin,Ymax)
-        legend = ax.legend(loc='best')
+        if self.FPPS:
+            legend = ax.legend(loc='best')
         bx = self.fplot.add_subplot(212)
         self.fplot.subplots_adjust(hspace=0.25)
         bx.clear()
@@ -379,9 +382,7 @@ without arguments fprime uses CuKa as default (Wave=1.54052A, E=8.0478keV)
         StlMax = min(2.0,math.sin(80.0*math.pi/180.)/Wave)
         Stl = pylab.arange(0.,StlMax,.01)
         Ymax = 0.0
-        colors=['b','g','r','c','m','k']
         for i,Elem in enumerate(self.Elems):
-            icol = i%6
             Els = Elem[0]
             Els = Els = Els.ljust(2).lower().capitalize()
             Ymax = max(Ymax,Elem[1])
@@ -404,13 +405,14 @@ without arguments fprime uses CuKa as default (Wave=1.54052A, E=8.0478keV)
                     X.append(360.0*math.asin(S*self.Wave)/math.pi)
                 else:
                     X.append(4.0*S*math.pi)
-            Color = colors[i]
+            Color = colors[i%6]
             Xp = np.array(X)
             ffop = np.array(ffo)
             ffp = np.array(ff)
             bx.plot(Xp,ffop,Color+'--',label=Els+" f")
             bx.plot(Xp,ffp,Color,label=Els+" f+f'")
-        legend = bx.legend(loc='best')
+        if self.Elems:
+            legend = bx.legend(loc='best')
         bx.set_ylim(0.0,Ymax+1.0)
         
         if newPlot:

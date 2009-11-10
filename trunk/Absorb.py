@@ -254,7 +254,7 @@ without arguments Absorb uses CuKa as default (Wave=1.54052A, E=8.0478keV)
         self.SpinText3.Bind(wx.EVT_TEXT_ENTER, self.OnSpinText3, id=wxID_SPINTEXT3)
         
         cellSizer.Add((5,10),0)
-        cellSizer.Add(wx.StaticText(parent=self.panel, label='Z vol:'),0,
+        cellSizer.Add(wx.StaticText(parent=self.panel, label='Z(vol):'),0,
             wx.ALIGN_CENTER_VERTICAL|wx.EXPAND)
         cellSizer.Add((5,10),0)
         self.SpinText4 = wx.TextCtrl(id=wxID_SPINTEXT4, parent=self.panel, 
@@ -422,6 +422,7 @@ without arguments Absorb uses CuKa as default (Wave=1.54052A, E=8.0478keV)
         self.SetWaveEnergy(Wave)
         
     def SetWaveEnergy(self,Wave):
+        Gkmu = unichr(0x3bc)
         self.Wave = Wave
         self.Energy = self.Kev/self.Wave
         self.Energy = round(self.Energy,4)
@@ -455,23 +456,24 @@ without arguments Absorb uses CuKa as default (Wave=1.54052A, E=8.0478keV)
                 mu = self.Zcell*Elem[2]*(r1[2]+r2[2])/2.0
                 Text += "%s\t%s%8.2f  %s%6s  %s%6.3f  %s%10.2f %s\n" %    (
                     'Element= '+str(Els),"N = ",Elem[2]," f'=",'not valid',
-                    ' f"=',(r1[1]+r2[1])/2.0,' mu=',mu,'barns')
+                    ' f"=',(r1[1]+r2[1])/2.0,' '+Gkmu+'=',mu,'barns')
             elif Elem[1] > 94 and self.Energy-DE < self.Kev/2.67:
                 mu = 0
                 Text += "%s\t%s%8.2f  %s%6s  %s%6s  %s%10s%s\n" %    (
                     'Element= '+str(Els),"N = ",Elem[2]," f'=",'not valid',
-                    ' f"=','not valid',' mu=','not valid')
+                    ' f"=','not valid',' '+Gkmu+'=','not valid')
             else:
                 mu = self.Zcell*Elem[2]*(r1[2]+r2[2])/2.0
                 Text += "%s\t%s%8.2f  %s%6.3f  %s%6.3f  %s%10.2f %s\n" %    (
                     'Element= '+str(Els),"N = ",Elem[2]," f'=",(r1[0]+r2[0])/2.0,
-                    ' f"=',(r1[1]+r2[1])/2.0,' mu=',mu,'barns')
+                    ' f"=',(r1[1]+r2[1])/2.0,' '+Gkmu+'=',mu,'barns')
             muT += mu
         
         if self.Volume:
-            Text += "%s %s%10.2f %s" % ("Total",' mu=',self.Pack*muT/self.Volume,'cm-1, ')
-            Text += "%s%10.2f%s" % ('Total muR=',self.Radius*self.Pack*muT/(10.0*self.Volume),', ')
-            Text += "%s%10.4f\n" % ('Tranmission exp(-2*muR)=',math.exp(-2*self.Radius*self.Pack*muT/(10.0*self.Volume)))
+            Text += "%s %s%10.2f %s" % ("Total",' '+Gkmu+'=',self.Pack*muT/self.Volume,'cm-1, ')
+            Text += "%s%10.2f%s" % ('Total '+Gkmu+'R=',self.Radius*self.Pack*muT/(10.0*self.Volume),', ')
+            Text += "%s%10.4f%s\n" % ('Transmission exp(-2*'+Gkmu+'R)=', \
+                math.exp(-2*self.Radius*self.Pack*muT/(1000.0*self.Volume)),'%')
             self.Results.SetValue(Text)
             den = Mass/(0.602*self.Volume)                
             if self.ifVol:

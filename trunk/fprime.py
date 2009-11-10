@@ -147,6 +147,8 @@ without arguments fprime uses CuKa as default (Wave=1.54052A, E=8.0478keV)
         self._init_coll_menuBar1_Menus(self.menuBar1)
 
     def _init_ctrls(self, parent):
+        Gktheta = unichr(0x3b8)
+        Gklambda = unichr(0x3bb)
         wx.Frame.__init__(self, parent=parent,
               size=wx.Size(500, 300),style=wx.DEFAULT_FRAME_STYLE, title='Fprime')              
         self._init_utils()
@@ -213,11 +215,11 @@ without arguments fprime uses CuKa as default (Wave=1.54052A, E=8.0478keV)
         self.choice1.SetToolTipString('Switch between wavelength and energy scale')
         self.choice1.Bind(wx.EVT_COMBOBOX, self.OnChoice1, id=wxID_FPRIMECHOICE1)
 
-        self.choice2 = wx.ComboBox(id=wxID_FPRIMECHOICE2, value='sin(theta)/lambda',
-            choices=['sin(theta)/lambda','2-theta','Q'],
+        self.choice2 = wx.ComboBox(id=wxID_FPRIMECHOICE2, value=' sin('+Gktheta+')/'+Gklambda,
+            choices=[' sin('+Gktheta+')/'+Gklambda,' 2-'+Gktheta,' Q'],
             parent=panel, style=wx.CB_READONLY|wx.CB_DROPDOWN)
         choiceSizer.Add(self.choice2,0)
-        self.choice2.SetToolTipString('Switch between sin(theta)/lambda, q and 2-theta scale')
+        self.choice2.SetToolTipString('Switch between sin('+Gktheta+')/'+Gklambda+', q and 2-'+Gktheta+' scale')
         self.choice2.Bind(wx.EVT_COMBOBOX, self.OnChoice2, id=wxID_FPRIMECHOICE2)
         mainSizer.Add(choiceSizer,0)
         mainSizer.Add((10,10),0)
@@ -443,6 +445,7 @@ without arguments fprime uses CuKa as default (Wave=1.54052A, E=8.0478keV)
             
 
     def SetWaveEnergy(self,Wave):
+        Gkmu = unichr(0x3bc)
         self.Wave = Wave
         self.Energy = self.Kev/self.Wave
         self.Energy = round(self.Energy,4)
@@ -467,15 +470,15 @@ without arguments fprime uses CuKa as default (Wave=1.54052A, E=8.0478keV)
             if Elem[1] > 78 and self.Energy+DE > self.Kev/0.16:
                 Text += "%s\t%s%6s\t%s%6.3f  \t%s%10.2f %s\n" %    (
                     'Element= '+str(Els)," f'=",'not valid',
-                    ' f"=',(r1[1]+r2[1])/2.0,' mu=',(r1[2]+r2[2])/2.0,'barns/atom')
+                    ' f"=',(r1[1]+r2[1])/2.0,' '+Gkmu+'=',(r1[2]+r2[2])/2.0,'barns/atom')
             elif Elem[1] > 94 and self.Energy-DE < self.Kev/2.67:
                 Text += "%s\t%s%6s\t%s%6s\t%s%10s%s\n" %    (
                     'Element= '+str(Els)," f'=",'not valid',
-                    ' f"=','not valid',' mu=','not valid')
+                    ' f"=','not valid',' '+Gkmu+'=','not valid')
             else:
                 Text += "%s\t%s%6.3f   \t%s%6.3f  \t%s%10.2f %s\n" %    (
                     'Element= '+str(Els)," f'=",(r1[0]+r2[0])/2.0,
-                    ' f"=',(r1[1]+r2[1])/2.0,' mu=',(r1[2]+r2[2])/2.0,'barns/atom')
+                    ' f"=',(r1[1]+r2[1])/2.0,' '+Gkmu+'=',(r1[2]+r2[2])/2.0,'barns/atom')
         self.Results.SetValue(Text)
         self.Results.Update()
         self.UpDateFPlot(Wave)

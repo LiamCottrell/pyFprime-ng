@@ -11,8 +11,8 @@ import wx.lib.buttons as wlb
 
 def GetFormFactorCoeff(El):
     """Read form factor coefficients from atomdata.asc file
-    Input - El: element 1-2 character symbol case irrevelant
-    Return - list of form factor dictionaries
+    @param El: element 1-2 character symbol case irrevelant
+    @return: FormFactors: list of form factor dictionaries
     each dictionary is:
     'Symbol':4 character element symbol with valence (e.g. 'NI+2')
     'Z': atomic number
@@ -74,8 +74,8 @@ def GetAtomInfo(El):
       
 def GetXsectionCoeff(El):
     """Read atom orbital scattering cross sections for fprime calculations via Cromer-Lieberman algorithm
-    Input - El: 2 character element symbol
-    Return - list of orbitals each a dictionary with detailed orbital information used by FPcalc
+    @param El: 2 character element symbol
+    @return: Orbs: list of orbitals each a dictionary with detailed orbital information used by FPcalc
     each dictionary is:
     'OrbName': Orbital name read from file
     'IfBe' 0/2 depending on orbital
@@ -153,8 +153,8 @@ def GetXsectionCoeff(El):
     
 def GetMagFormFacCoeff(El):
     """Read magnetic form factor data from atomdata.asc file
-    Input - El: 2 character element symbol
-    Return - MagFormFactors: list of all magnetic form factors dictionaries for element El.
+    @param El: 2 character element symbol
+    @return: MagFormFactors: list of all magnetic form factors dictionaries for element El.
     each dictionary contains:
     'Symbol':Symbol
     'Z':Z
@@ -184,6 +184,7 @@ def GetMagFormFacCoeff(El):
                 Z=int(S[:2])
                 Symbol = S[3:7]
                 S = S[12:]
+                SN = SN[:12]
                 mfa = (float(S[:7]),float(S[14:21]),float(S[28:35]),float(S[42:49]))
                 mfb = (float(S[7:14]),float(S[21:28]),float(S[35:42]),float(S[49:56]))
                 nfa = (float(SN[:7]),float(SN[14:21]),float(SN[28:35]),float(SN[42:49]))
@@ -196,9 +197,9 @@ def GetMagFormFacCoeff(El):
 
 def ScatFac(FormFac, SThL):
     """compute value of form factor
-    Input - FormFac: dictionary  defined in GetFormFactorCoeff 
-            SThL: sin-theta/lambda
-    Return -  real part of form factor
+    @param FormFac: dictionary  defined in GetFormFactorCoeff 
+    @param SThL: sin-theta/lambda
+    @return: f: real part of form factor
     """
     f = FormFac['fc']
     fa = FormFac['fa']
@@ -210,9 +211,9 @@ def ScatFac(FormFac, SThL):
             
 def FPcalc(Orbs, KEv):
     """Compute real & imaginary resonant X-ray scattering factors
-    Input - Orbs: list of orbital dictionaries as defined in GetXsectionCoeff
-            KEv: x-ray energy in keV
-    Return - (f',f",mu): real, imaginary parts of resonant scattering & atomic absorption coeff.
+    @param Orbs: list of orbital dictionaries as defined in GetXsectionCoeff
+    @param KEv: x-ray energy in keV
+    @return: C: (f',f",mu): real, imaginary parts of resonant scattering & atomic absorption coeff.
     """
     def Aitken(Orb, LKev):
         Nval = Orb['Nval']

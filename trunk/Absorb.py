@@ -473,7 +473,7 @@ without arguments Absorb uses CuKa as default (Wave=1.54052A, E=8.0478keV)
             Text += "%s %s%10.2f %s" % ("Total",' '+Gkmu+'=',self.Pack*muT/self.Volume,'cm-1, ')
             Text += "%s%10.2f%s" % ('Total '+Gkmu+'R=',self.Radius*self.Pack*muT/(10.0*self.Volume),', ')
             Text += "%s%10.4f%s\n" % ('Transmission exp(-2*'+Gkmu+'R)=', \
-                math.exp(-2*self.Radius*self.Pack*muT/(1000.0*self.Volume)),'%')
+                100.0*math.exp(-2*self.Radius*self.Pack*muT/(10.0*self.Volume)),'%')
             self.Results.SetValue(Text)
             den = Mass/(0.602*self.Volume)                
             if self.ifVol:

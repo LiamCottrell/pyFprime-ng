@@ -92,7 +92,33 @@ without arguments Absorb uses CuKa as default (Wave=1.54052A, E=8.0478keV)
 
     def _init_coll_KALPHA_Items(self, parent):
         "Set of characteristic radiation from sealed tube sources"
-
+        def OnCrkaMenu(event):
+            self.SetWaveEnergy(2.28962)
+    
+        def OnMnkaMenu(event):
+            self.SetWaveEnergy(2.10174)
+    
+        def OnFekaMenu(event):
+            self.SetWaveEnergy(1.93597)
+    
+        def OnCokaMenu(event):
+            self.SetWaveEnergy(1.78896)
+    
+        def OnNikaMenu(event):
+            self.SetWaveEnergy(1.65784)
+    
+        def OnCukaMenu(event):
+            self.SetWaveEnergy(1.54052)
+    
+        def OnZnkaMenu(event):
+            self.SetWaveEnergy(1.43510)
+    
+        def OnMokaMenu(event):
+            self.SetWaveEnergy(0.70926)
+    
+        def OnAgkaMenu(event):
+            self.SetWaveEnergy(0.55936)
+            
         parent.Append(help='', id=wxID_KALPHACRKA, kind=wx.ITEM_NORMAL,
               text='CrKa')
         parent.Append(help='', id=wxID_KALPHAMNKA, kind=wx.ITEM_NORMAL,
@@ -111,15 +137,15 @@ without arguments Absorb uses CuKa as default (Wave=1.54052A, E=8.0478keV)
               text='MoKa')
         parent.Append(help='', id=wxID_KALPHAAGKA, kind=wx.ITEM_NORMAL,
               text='AgKa')
-        self.Bind(wx.EVT_MENU, self.OnCrkaMenu, id=wxID_KALPHACRKA)
-        self.Bind(wx.EVT_MENU, self.OnMnkaMenu, id=wxID_KALPHAMNKA)
-        self.Bind(wx.EVT_MENU, self.OnFekaMenu, id=wxID_KALPHAFEKA)
-        self.Bind(wx.EVT_MENU, self.OnCokaMenu, id=wxID_KALPHACOKA)
-        self.Bind(wx.EVT_MENU, self.OnNikaMenu, id=wxID_KALPHANIKA)
-        self.Bind(wx.EVT_MENU, self.OnCukaMenu, id=wxID_KALPHACUKA)
-        self.Bind(wx.EVT_MENU, self.OnZnkaMenu, id=wxID_KALPHAZNKA)
-        self.Bind(wx.EVT_MENU, self.OnMokaMenu, id=wxID_KALPHAMOKA)
-        self.Bind(wx.EVT_MENU, self.OnAgkaMenu, id=wxID_KALPHAAGKA)
+        self.Bind(wx.EVT_MENU, OnCrkaMenu, id=wxID_KALPHACRKA)
+        self.Bind(wx.EVT_MENU, OnMnkaMenu, id=wxID_KALPHAMNKA)
+        self.Bind(wx.EVT_MENU, OnFekaMenu, id=wxID_KALPHAFEKA)
+        self.Bind(wx.EVT_MENU, OnCokaMenu, id=wxID_KALPHACOKA)
+        self.Bind(wx.EVT_MENU, OnNikaMenu, id=wxID_KALPHANIKA)
+        self.Bind(wx.EVT_MENU, OnCukaMenu, id=wxID_KALPHACUKA)
+        self.Bind(wx.EVT_MENU, OnZnkaMenu, id=wxID_KALPHAZNKA)
+        self.Bind(wx.EVT_MENU, OnMokaMenu, id=wxID_KALPHAMOKA)
+        self.Bind(wx.EVT_MENU, OnAgkaMenu, id=wxID_KALPHAAGKA)
 
     def _init_coll_ABSORB_Items(self, parent):
         parent.Append(help='Add new element', id=wxID_NEW, kind=wx.ITEM_NORMAL,
@@ -184,7 +210,7 @@ without arguments Absorb uses CuKa as default (Wave=1.54052A, E=8.0478keV)
                 numElem = wx.TextCtrl(id=wxID_NUMELEM,parent=self.panel,name=Elem[0],
                     size=wx.Size(70,20),value="%.2f" % (Elem[2]),style=wx.TE_PROCESS_ENTER)
                 compSizer.Add(numElem,0)
-                numElem.SetToolTipString('Enter number of atoms in formula')
+                numElem.SetToolTipString('Enter number of atoms in formula & Enter')
                 numElem.Bind(wx.EVT_TEXT_ENTER, self.OnNumElem, id=wxID_NUMELEM)
             mainSizer.Add(compSizer,0)
             mainSizer.Add((10,15),0)           
@@ -198,7 +224,7 @@ without arguments Absorb uses CuKa as default (Wave=1.54052A, E=8.0478keV)
             size=wx.Size(100,20), value = "%.4f" % (self.Wave),style=wx.TE_PROCESS_ENTER )
         selSizer.Add(self.SpinText1,0)
         selSizer.Add((5,10),0)
-        self.SpinText1.SetToolTipString('Enter desired wavelength')
+        self.SpinText1.SetToolTipString('Enter desired wavelength & Enter')
         self.SpinText1.Bind(wx.EVT_TEXT_ENTER, self.OnSpinText1, id=wxID_SPINTEXT1)
         
         selSizer.Add(wx.StaticText(parent=self.panel, label='Energy:'),0,
@@ -208,7 +234,7 @@ without arguments Absorb uses CuKa as default (Wave=1.54052A, E=8.0478keV)
             size=wx.Size(100,20), value = "%.4f" % (self.Energy),style=wx.TE_PROCESS_ENTER) 
         selSizer.Add(self.SpinText2,0)
         selSizer.Add((5,10),0)
-        self.SpinText2.SetToolTipString('Enter desired energy')
+        self.SpinText2.SetToolTipString('Enter desired energy & Enter')
         self.SpinText2.Bind(wx.EVT_TEXT_ENTER, self.OnSpinText2, id=wxID_SPINTEXT2)
         
         selSizer.Add(wx.StaticText(parent=self.panel, label='Plot scale:'),
@@ -250,7 +276,7 @@ without arguments Absorb uses CuKa as default (Wave=1.54052A, E=8.0478keV)
               size=wx.Size(100,20), value = "%.2f" % (self.Volume),style=wx.TE_PROCESS_ENTER )
         cellSizer.Add(self.SpinText3,0)
         cellSizer.Add((5,10),0)
-        self.SpinText3.SetToolTipString('Enter unit cell volume in A^3')
+        self.SpinText3.SetToolTipString('Enter unit cell volume in A^3 & Enter')
         self.SpinText3.Bind(wx.EVT_TEXT_ENTER, self.OnSpinText3, id=wxID_SPINTEXT3)
         
         cellSizer.Add((5,10),0)
@@ -261,7 +287,7 @@ without arguments Absorb uses CuKa as default (Wave=1.54052A, E=8.0478keV)
               size=wx.Size(50,20), value = "%d" % (self.Zcell),style=wx.TE_PROCESS_ENTER )
         cellSizer.Add(self.SpinText4,0)
         cellSizer.Add((5,10),0)
-        self.SpinText4.SetToolTipString('Enter no. formula units per volume')
+        self.SpinText4.SetToolTipString('Enter no. formula units per volume & Enter')
         self.SpinText4.Bind(wx.EVT_TEXT_ENTER, self.OnSpinText4, id=wxID_SPINTEXT4)
         
         cellSizer.Add((5,10),0)
@@ -272,7 +298,7 @@ without arguments Absorb uses CuKa as default (Wave=1.54052A, E=8.0478keV)
               size=wx.Size(50,20), value = "%.2f" % (self.Radius),style=wx.TE_PROCESS_ENTER )
         cellSizer.Add(self.SpinText5,0)
         cellSizer.Add((5,10),0)
-        self.SpinText5.SetToolTipString('Enter sample radius in mm')
+        self.SpinText5.SetToolTipString('Enter sample radius in mm & Enter')
         self.SpinText5.Bind(wx.EVT_TEXT_ENTER, self.OnSpinText5, id=wxID_SPINTEXT5)
 
         cellSizer.Add((5,10),0)
@@ -283,7 +309,7 @@ without arguments Absorb uses CuKa as default (Wave=1.54052A, E=8.0478keV)
               size=wx.Size(50,20), value = "%.2f" % (self.Pack),style=wx.TE_PROCESS_ENTER )
         cellSizer.Add(self.SpinText6,0)
         cellSizer.Add((5,10),0)
-        self.SpinText6.SetToolTipString('Enter packing fraction')
+        self.SpinText6.SetToolTipString('Enter packing fraction & Enter')
         self.SpinText6.Bind(wx.EVT_TEXT_ENTER, self.OnSpinText6, id=wxID_SPINTEXT6)
 
         mainSizer.Add(cellSizer,0)
@@ -328,7 +354,7 @@ without arguments Absorb uses CuKa as default (Wave=1.54052A, E=8.0478keV)
             self.Delete.Enable(True)
             self.panel.Destroy()
             self.DrawPanel()
-            self.SetWaveEnergy(Absorb.Wave)
+            self.SetWaveEnergy(self.Wave)
         PE.Destroy()
             
     def OnDeleteMenu(self, event):
@@ -350,39 +376,12 @@ without arguments Absorb uses CuKa as default (Wave=1.54052A, E=8.0478keV)
                 self.DrawPanel()
                 self.SetWaveEnergy(self.Wave)
         
-    def OnCrkaMenu(self, event):
-        self.SetWaveEnergy(2.28962)
-
-    def OnMnkaMenu(self, event):
-        self.SetWaveEnergy(2.10174)
-
-    def OnFekaMenu(self, event):
-        self.SetWaveEnergy(1.93597)
-
-    def OnCokaMenu(self, event):
-        self.SetWaveEnergy(1.78896)
-
-    def OnNikaMenu(self, event):
-        self.SetWaveEnergy(1.65784)
-
-    def OnCukaMenu(self, event):
-        self.SetWaveEnergy(1.54052)
-
-    def OnZnkaMenu(self, event):
-        self.SetWaveEnergy(1.43510)
-
-    def OnMokaMenu(self, event):
-        self.SetWaveEnergy(0.70926)
-
-    def OnAgkaMenu(self, event):
-        self.SetWaveEnergy(0.55936)
-        
     def OnNumElem(self, event):
         for Elem in self.Elems:
             if event.GetEventObject().GetName() == Elem[0]:
                 Elem[2] = float(event.GetEventObject().GetValue())
                 event.GetEventObject().SetValue("%8.2f" % (Elem[2]))
-                self.SetWaveEnergy(Absorb.Wave)                
+                self.SetWaveEnergy(self.Wave)                
         
     def OnSpinText1(self, event):
         self.SetWaveEnergy(float(self.SpinText1.GetValue()))

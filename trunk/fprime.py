@@ -170,7 +170,7 @@ without arguments fprime uses CuKa as default (Wave=1.54052A, E=8.0478keV)
               size=wx.Size(100,20), value = "%6.4f" % (self.Wave),style=wx.TE_PROCESS_ENTER )
         selSizer.Add(self.SpinText1,0)
         selSizer.Add((5,10),0)
-        self.SpinText1.SetToolTipString('Enter desired wavelength')
+        self.SpinText1.SetToolTipString('Enter desired wavelength & Enter')
         self.SpinText1.Bind(wx.EVT_TEXT_ENTER, self.OnSpinText1, id=wxID_SPINTEXT1)
         
         selSizer.Add(wx.StaticText(parent=panel, label='Energy:'),0,
@@ -179,7 +179,7 @@ without arguments fprime uses CuKa as default (Wave=1.54052A, E=8.0478keV)
         self.SpinText2 = wx.TextCtrl(id=wxID_SPINTEXT2, parent=panel, 
               size=wx.Size(100,20), value = "%7.4f" % (self.Energy),style=wx.TE_PROCESS_ENTER) 
         selSizer.Add(self.SpinText2,0)
-        self.SpinText2.SetToolTipString('Enter desired energy')
+        self.SpinText2.SetToolTipString('Enter desired energy & Enter')
         self.SpinText2.Bind(wx.EVT_TEXT_ENTER, self.OnSpinText2, id=wxID_SPINTEXT2)
         mainSizer.Add(selSizer,0)
         mainSizer.Add((10,10),0)
@@ -258,7 +258,7 @@ without arguments fprime uses CuKa as default (Wave=1.54052A, E=8.0478keV)
                     Fprime.Elems.append(Elem)
             self.Delete.Enable(True)
             self.CalcFPPS()
-            self.SetWaveEnergy(Fprime.Wave)
+            self.SetWaveEnergy(self.Wave)
         PE.Destroy()
             
     def OnFPRIMEDeleteMenu(self, event):
@@ -272,7 +272,7 @@ without arguments fprime uses CuKa as default (Wave=1.54052A, E=8.0478keV)
                 for Elem in self.Elems:
                     if Elem[0] != El:
                         S.append(Elem)
-                Fprime.Elems = S
+                self.Elems = S
                 self.CalcFPPS()
                 if not self.Elems:
                     self.Delete.Enable(False)
@@ -462,7 +462,7 @@ without arguments fprime uses CuKa as default (Wave=1.54052A, E=8.0478keV)
             self.slider1.SetValue(int(1000.*self.Energy))
             self.SpinButton.SetValue(int(10000.*self.Energy))
         Text = ''
-        for Elem in Fprime.Elems:
+        for Elem in self.Elems:
             r1 = Element.FPcalc(Elem[3],E+DE)
             r2 = Element.FPcalc(Elem[3],E-DE)
             Els = Elem[0]

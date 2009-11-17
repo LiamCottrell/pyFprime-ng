@@ -149,6 +149,7 @@ without arguments fprime uses CuKa as default (Wave=1.54052A, E=8.0478keV)
     def _init_ctrls(self, parent):
         Gktheta = unichr(0x3b8)
         Gklambda = unichr(0x3bb)
+
         wx.Frame.__init__(self, parent=parent,
               size=wx.Size(500, 300),style=wx.DEFAULT_FRAME_STYLE, title='Fprime')              
         self._init_utils()
@@ -215,12 +216,21 @@ without arguments fprime uses CuKa as default (Wave=1.54052A, E=8.0478keV)
         self.choice1.SetToolTipString('Switch between wavelength and energy scale')
         self.choice1.Bind(wx.EVT_COMBOBOX, self.OnChoice1, id=wxID_FPRIMECHOICE1)
 
+        def OnChoice2(event):
+            if event.GetString() == ' sin('+Gktheta+')/'+Gklambda:
+                self.FFxaxis = 'S'
+            elif event.GetString() == ' Q':
+                self.FFxaxis = 'Q'
+            else:
+                self.FFxaxis = 'T'
+            self.UpDateFPlot(self.Wave)
+            
         self.choice2 = wx.ComboBox(id=wxID_FPRIMECHOICE2, value=' sin('+Gktheta+')/'+Gklambda,
-            choices=[' sin('+Gktheta+')/'+Gklambda,' 2-'+Gktheta,' Q'],
+            choices=[' sin('+Gktheta+')/'+Gklambda,' 2'+Gktheta,' Q'],
             parent=panel, style=wx.CB_READONLY|wx.CB_DROPDOWN)
         choiceSizer.Add(self.choice2,0)
-        self.choice2.SetToolTipString('Switch between sin('+Gktheta+')/'+Gklambda+', q and 2-'+Gktheta+' scale')
-        self.choice2.Bind(wx.EVT_COMBOBOX, self.OnChoice2, id=wxID_FPRIMECHOICE2)
+        self.choice2.SetToolTipString('Switch between sin('+Gktheta+')/'+Gklambda+', q and 2'+Gktheta+' scale')
+        self.choice2.Bind(wx.EVT_COMBOBOX, OnChoice2, id=wxID_FPRIMECHOICE2)
         mainSizer.Add(choiceSizer,0)
         mainSizer.Add((10,10),0)
         panel.SetSizer(mainSizer)
@@ -552,15 +562,6 @@ without arguments fprime uses CuKa as default (Wave=1.54052A, E=8.0478keV)
             self.SpinButton.SetToolTipString('Fine control of energy')
             self.slider1.SetToolTipString('Coarse control of energy')
         self.CalcFPPS()
-        self.UpDateFPlot(self.Wave)
-
-    def OnChoice2(self, event):
-        if event.GetString() == "sin(theta)/lambda":
-            self.FFxaxis = 'S'
-        elif event.GetString() == 'Q':
-            self.FFxaxis = 'Q'
-        else:
-            self.FFxaxis = 'T'
         self.UpDateFPlot(self.Wave)
 
     def OnABOUTItems0Menu(self, event):

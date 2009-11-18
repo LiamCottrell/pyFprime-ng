@@ -184,7 +184,7 @@ def GetMagFormFacCoeff(El):
                 Z=int(S[:2])
                 Symbol = S[3:7]
                 S = S[12:]
-                SN = SN[:12]
+                SN = SN[12:]
                 mfa = (float(S[:7]),float(S[14:21]),float(S[28:35]),float(S[42:49]))
                 mfb = (float(S[7:14]),float(S[21:28]),float(S[35:42]),float(S[49:56]))
                 nfa = (float(SN[:7]),float(SN[14:21]),float(SN[28:35]),float(SN[42:49]))

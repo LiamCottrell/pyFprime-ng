@@ -422,6 +422,7 @@ without arguments Absorb uses CuKa as default (Wave=1.54052A, E=8.0478keV)
         
     def SetWaveEnergy(self,Wave):
         Gkmu = unichr(0x3bc)
+        Pwr3 = unichr(0x0b3)
         self.Wave = Wave
         self.Energy = self.Kev/self.Wave
         self.Energy = round(self.Energy,4)
@@ -479,7 +480,7 @@ without arguments Absorb uses CuKa as default (Wave=1.54052A, E=8.0478keV)
                 Text += '%s' % ('Theor. density=')
             else:  
                 Text += '%s' % ('Est. density=')
-            Text += '%6.3f %s%.3f %s\n' % (den,'g/cm^3, Powder density=',self.Pack*den,'g/cm^3')
+            Text += '%6.3f %s%.3f %s\n' % (den,'g/cm'+Pwr3+', Powder density=',self.Pack*den,'g/cm'+Pwr3)
             self.Results.SetValue(Text)
         self.Results.Update()
         self.SpinText3.SetValue("%.2f" % (self.Volume))

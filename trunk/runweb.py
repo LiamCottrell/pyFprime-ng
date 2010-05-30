@@ -1,6 +1,8 @@
 """Web absorption computation
 """
 import sys
+import os
+os.environ[ 'HOME' ] = '/tmp/'
 import webabsorb
 
 #This expects an input file with the following information
@@ -23,6 +25,7 @@ C60Xe
 
 # note: a formula contains elements numbers and optional spaces only 
 #        for example: 'C4 H9', 'H2O', 'MGO' or 'O MG' not 'OMG'
+
 
 formula = sys.stdin.readline().strip()
 Radius = float(sys.stdin.readline())

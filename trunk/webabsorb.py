@@ -11,7 +11,7 @@ import matplotlib as mpl
 mpl.use( 'Agg' )
 import pylab
 
-import Element
+import webElement as Element
 
 class Absorb():
     Wave = 1.5405      #CuKa default
@@ -60,7 +60,7 @@ class Absorb():
             s = ""
             for i in invalid: s+=i
             raise Exception,'Invalid characters ("%s") in chemical formula' % s
-        for El,N in re.findall('\s*([A-Za-z][A-Za-z]?)\s*([0-9]*\\.?[0-9]*)\s*',
+        for El,N in re.findall('\s*([A-Z][a-z]?)\s*([0-9]*\\.?[0-9]*)\s*',
                                ElementString):
             if not N:
                 N = 1
@@ -82,7 +82,8 @@ class Absorb():
             raise Exception,"No valid elements found in chemical formula"
 
     def ComputeMu(self):
-        Gkmu = unichr(0x3bc)
+        #Gkmu = unichr(0x3bc)
+        Gkmu = 'mu'
         #Pwr3 = unichr(0x0b3)
         Pwr3 = "<sup>3</sup>"
         self.Energy = self.Kev/self.Wave
@@ -95,9 +96,9 @@ class Absorb():
             self.Volume += 10.*Elem[2]
         muT = 0
         Mass = 0
-        Text += "Wavelength = %.4f Angstrom\n" % (self.Wave)
-        Text += "Energy     = %.4f KeV\n" % (self.Energy)
-        Text += "Sample Radius = %.2f mm (diameter=%.2f mm)\n" % (self.Radius,
+        Text += "Wavelength = %.4f Angstrom<BR>\n" % (self.Wave)
+        Text += "Energy     = %.4f KeV<BR>\n" % (self.Energy)
+        Text += "Sample Radius = %.2f mm (diameter=%.2f mm)<BR>\n" % (self.Radius,
                                                                   2*self.Radius,)
         Text += "<PRE>\n"
         for Elem in self.Elems:
@@ -135,10 +136,10 @@ class Absorb():
 
             Text += "%s %s%10.2f %s" % ("Total",' '+Gkmu+'=',self.Pack*muT/self.Volume,'cm<sup>-1</sup>, ')
             Text += "%s%10.2f%s" % ('Total '+Gkmu+'R=',self.Radius*self.Pack*muT/(10.0*self.Volume),', ')
-            Text += "%s%10.4f%s\n" % ('Transmission exp(-2*'+Gkmu+'R)=', \
+            Text += "%s%10.4f%s<BR>\n" % ('Transmission exp(-2*'+Gkmu+'R)=', \
                 100.0*math.exp(-2*self.Radius*self.Pack*muT/(10.0*self.Volume)),'%')
             Text += '%s' % ('Est. density=')
-            Text += '%6.3f %s%.3f %s\n' % (den,'g/cm'+Pwr3+
+            Text += '%6.3f %s%.3f %s<BR>\n' % (den,'g/cm'+Pwr3+
                                            ', %s density=' % label,
                                            self.Pack*den,'g/cm'+Pwr3)
             print Text

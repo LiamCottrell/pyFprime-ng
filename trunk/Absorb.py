@@ -534,7 +534,10 @@ without arguments Absorb uses CuKa as default (Wave=1.54052A, E=8.0478keV)
                     else:
                         Fpps = (Els,Es,mus)
                     FPPS.append(Fpps)
-                Fpps = ('Total',Ws,muT)
+                if self.ifWave:
+                    Fpps = ('Total',Ws,muT)
+                else:
+                    Fpps = ('Total',Es,muT)
                 FPPS.append(Fpps)
             finally:
                 wx.EndBusyCursor()

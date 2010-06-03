@@ -21,7 +21,6 @@ class Absorb():
     Wres = 0.004094    #plot resolution step size as const delta-lam/lam - gives 1000 steps for Wmin to Wmax
     Eres = 1.5e-4      #typical energy resolution for synchrotron x-ray sources
     Energy = Kev/Wave
-    ifWave = True
     #ifWave = False   # broken
     Volume = 0
     ifVol = False
@@ -33,9 +32,11 @@ class Absorb():
         if Wave and Energy:
             raise Exception,"Energy and wavelength cannot both be set"
         if Wave:
+            self.ifWave = True
             self.Wave = Wave
             self.Energy = self.Kev/self.Wave
         elif Energy:
+            self.ifWave = False
             self.Energy = Energy
             self.Wave = self.Kev/Energy 
         else:
@@ -186,7 +187,10 @@ class Absorb():
                     else:
                         Fpps = (Els,Es,mus)
                     FPPS.append(Fpps)
-                Fpps = ('Total',Ws,muT)
+                if self.ifWave:
+                    Fpps = ('Total',Ws,muT)
+                else:
+                    Fpps = ('Total',Es,muT)
                 FPPS.append(Fpps)
             finally:
                 pass

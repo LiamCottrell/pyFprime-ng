@@ -133,10 +133,10 @@ if ($mode == "") {
   $descriptorspec = array(
    0 => array("pipe", "r"),  // stdin is a pipe that the child will read from
    1 => array("pipe", "w"),  // stdout is a pipe that the child will write to
-   2 => array("file", "/tmp/absorbplots/error-output.txt", "a") // stderr is a file to write
+   2 => array("file", "/tmp/absorbplots/error-output.txt", "w") // stderr is a file to write
 			  );
 
-  $process = proc_open('/APSshare/bin/python /home/joule/WEB11BM/www/absorb/runweb.py', $descriptorspec, $pipes);
+  $process = proc_open('echo $SHELL; /APSshare/bin/python /home/joule/WEB11BM/www/absorb/runweb.py', $descriptorspec, $pipes);
   if (is_resource($process)) {
     $fp = $pipes[0];
     fwrite($fp, $formula . "\n");

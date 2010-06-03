@@ -102,14 +102,14 @@ if ($mode == "") {
 #===============================================================================
   print "<h2>X-ray Absorption Computation</h2>";
   $now = date("ymdhis", time());
-  $fileroot = "Abs" . $now . getmypid() . ".png";
-  $fileloc="/tmp/absorbplots/";
-  $filename=$fileloc . $fileroot;
-  if (file_exists($filename)) {
-    unlink($filename);
+  $imageroot = "Abs" . $now . getmypid() . ".png";
+  $imageloc="/tmp/absorbplots/";
+  $imagefile=$imageloc . $imageroot;
+  if (file_exists($imagefile)) {
+    unlink($imagefile);
   } else {
-    if (! file_exists($fileloc)) {
-      mkdir($fileloc);
+    if (! file_exists($imageloc)) {
+      mkdir($imageloc);
     }
   }
   $type = strip_tags($_GET['spectrumtype']);
@@ -140,7 +140,7 @@ if ($mode == "") {
     $fp = $pipes[0];
     fwrite($fp, $formula . "\n");
     fwrite($fp, $radius . "\n");
-    fwrite($fp, $filename . "\n");
+    fwrite($fp, $imagefile . "\n");
     fwrite($fp, $iwave . "\n");
     fwrite($fp, $value . "\n");
     fwrite($fp, $irho . "\n");
@@ -149,7 +149,21 @@ if ($mode == "") {
     while(!feof($pipes[1])) { 
       print fgets($pipes[1]);
     }
-    print '<img src="plotimg/' . $fileroot . '">';
+    if (file_exists($imagefile)) {
+      print '<img src="plotimg/' . $imageroot . '">';
+      print "<BR><I>".
+	"The plot above shows the absorption for each input element and for " . 
+	"the specified composition as a function of x-ray wavelength/energy." .
+	" The blue dotted line indicates a muR value of 1. In a capillary " . 
+	"(Debye-Scherrer) geometry, it is ideal when muR is 1 or below, as ".
+	"sample absorption is minimal and no correction is usually needed. " .
+	"The red dotted line indicates a muR value of 5. For muR >= 5, ".
+	" measurements are generally not possible in a capillary ".
+	"geometry, as there will be very severe levels of absorption and ".
+	"corrections are inaccurate.</I>";
+    } else {
+      print "<H3>An error occurred running the script, please check your input</H3>";
+    }
   } else {
     print "no process created<BR>";
   }

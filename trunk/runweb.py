@@ -31,25 +31,39 @@ formula = sys.stdin.readline().strip()
 Radius = float(sys.stdin.readline())
 graphic = sys.stdin.readline().strip()
 ifwave = sys.stdin.readline()
-if int(ifwave):
-    Wave = float(sys.stdin.readline())
-    Energy = 0
-else:
-    Wave = 0
-    Energy = float(sys.stdin.readline())
+error = 0
+try:
+    if int(ifwave):
+        Wave = float(sys.stdin.readline())
+        Energy = 0
+    else:
+        Wave = 0
+        Energy = float(sys.stdin.readline())
+except:
+    print "<BR>Invalid Wavelength/Energy"
+    error = 1
+
 ifpack = sys.stdin.readline()
-if int(ifpack):
-    Packing = float(sys.stdin.readline())
-    InputDensity = 0
-else:
-    Packing = 0
-    InputDensity = float(sys.stdin.readline())
+try:
+    if int(ifpack):
+        Packing = float(sys.stdin.readline())
+        InputDensity = 0
+    else:
+        Packing = 0
+        InputDensity = float(sys.stdin.readline())
+except:
+    print "<BR>Invalid Density/Packing Fraction"
+    error = 1
+
+if error:
+    sys.exit()
 
 try:
+    #print '<PRE>Radius=',Radius,  'Wave=',Wave, 'Energy=',Energy, 'Packing=',Packing, 'InputDensity=',InputDensity,'ifwave=',ifwave,'</PRE>'
+
     calc = webabsorb.Absorb(Radius,  Wave=Wave, Energy=Energy, 
                             Packing=Packing, InputDensity=InputDensity)
 
-    #print '<PRE>Radius=',Radius,  'Wave=',Wave, 'Energy=',Energy, 'Packing=',Packing, 'InputDensity=',InputDensity,'ifwave=',ifwave,'</PRE>'
 
     calc.SetElems(formula)
     calc.ComputeMu()

@@ -227,8 +227,8 @@ class Absorb():
             ax.set_xlabel(r'$\mathsf{E, keV}$',fontsize=14)
             ax.set_xscale('log')
             ax.axvline(x=self.Kev/Wave,picker=3,color='black')
-        ax.axhline(y=1.0,color='b')
-        ax.axhline(y=5.0,color='r')
+        ax.axhline(y=1.0,color='b',linestyle=":")
+        ax.axhline(y=5.0,color='r',linestyle=":")
         ax.set_ylim(Ymin,Ymax)
         if self.FPPS:
             legend = ax.legend(loc='best')

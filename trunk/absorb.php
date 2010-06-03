@@ -44,7 +44,7 @@ if ($mode == "") {
 <!-----MAIN BODY----------------------------------------------------MAIN BODY-->
 
 <h2>Compute X-ray Absorption</h2>
-
+    <I>Absorption computation utility routine by Robert B. Von Dreele, Matthew R. Suchomel and Brian H. Toby.</I><P>
    <FORM METHOD="GET" ACTION="<?php echo $_SERVER['PHP_SELF']; ?>">
     <INPUT TYPE="hidden" NAME="mode" value="calc">
 
@@ -59,13 +59,13 @@ if ($mode == "") {
 <BR>
 
 <B>Chemical Formula:</B><br>
-<div style="font-size:small;"><i>enter using element chemical symbol & fractional number, e.g. YBa2Cu3O6.5</i></div>
+    <div style="font-size:small;"><i>enter using element chemical symbol & optional fractional number, e.g. YBa2Cu3O6.5. (Proper capitalization is required).</i></div>
 <input name="formula" size=50 value="">
 <BR>
 <BR>
 
 <B>Sample Radius:</B><br>
-<input name="radius" size=5 value="0.4"><span style="font-size:small;"><i>  capillary radius in mm</i></span>
+<input name="radius" size=5 value="0.35"><span style="font-size:small;"><i>  capillary radius in mm</i></span>
 <BR>
 <BR>
  
@@ -120,7 +120,7 @@ if ($mode == "") {
   if (strstr($type, "Wavelength")) {
     $iwave = 1;
   } else {
-    $iwave = 1;
+    $iwave = 0;
   }
   $densitytype = strip_tags($_GET['densitytype']);
   $density = strip_tags($_GET['density']);
@@ -135,8 +135,7 @@ if ($mode == "") {
    1 => array("pipe", "w"),  // stdout is a pipe that the child will write to
    2 => array("file", "/tmp/absorbplots/error-output.txt", "w") // stderr is a file to write
 			  );
-
-  $process = proc_open('echo $SHELL; /APSshare/bin/python /home/joule/WEB11BM/www/absorb/runweb.py', $descriptorspec, $pipes);
+  $process = proc_open('python /home/joule/WEB11BM/www/absorb/runweb.py', $descriptorspec, $pipes);
   if (is_resource($process)) {
     $fp = $pipes[0];
     fwrite($fp, $formula . "\n");
@@ -145,7 +144,7 @@ if ($mode == "") {
     fwrite($fp, $iwave . "\n");
     fwrite($fp, $value . "\n");
     fwrite($fp, $irho . "\n");
-    fwrite($fp, "0.65\n");
+    fwrite($fp, $density . "\n");
     fclose($pipes[0]);
     while(!feof($pipes[1])) { 
       print fgets($pipes[1]);

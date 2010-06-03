@@ -31,14 +31,14 @@ formula = sys.stdin.readline().strip()
 Radius = float(sys.stdin.readline())
 graphic = sys.stdin.readline().strip()
 ifwave = sys.stdin.readline()
-if ifwave:
+if int(ifwave):
     Wave = float(sys.stdin.readline())
     Energy = 0
 else:
     Wave = 0
     Energy = float(sys.stdin.readline())
 ifpack = sys.stdin.readline()
-if ifpack:
+if int(ifpack):
     Packing = float(sys.stdin.readline())
     InputDensity = 0
 else:
@@ -46,12 +46,13 @@ else:
     InputDensity = float(sys.stdin.readline())
 
 try:
-#calc = webabsorb.Absorb(0.3, Wave=1, InputDensity=10, Packing=0.66)
-    calc = webabsorb.Absorb(0.3,  Wave=Wave, Energy=Energy, Packing=0.66)
+    calc = webabsorb.Absorb(Radius,  Wave=Wave, Energy=Energy, 
+                            Packing=Packing, InputDensity=InputDensity)
+
+    #print '<PRE>Radius=',Radius,  'Wave=',Wave, 'Energy=',Energy, 'Packing=',Packing, 'InputDensity=',InputDensity,'ifwave=',ifwave,'</PRE>'
 
     calc.SetElems(formula)
     calc.ComputeMu()
     calc.SaveFig(graphic, format='png' )
 except Exception, err:
     print "Error:", err
-    

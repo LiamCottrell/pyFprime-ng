@@ -150,7 +150,7 @@ if ($mode == "") {
       print fgets($pipes[1]);
     }
     if (file_exists($imagefile)) {
-      print '<img src="plotimg/' . $imageroot . '">';
+      print '<P><img src="plotimg/' . $imageroot . '">';
       print "<BR><I>".
 	"The plot above shows the absorption for each input element and for " . 
 	"the specified composition as a function of x-ray wavelength/energy." .

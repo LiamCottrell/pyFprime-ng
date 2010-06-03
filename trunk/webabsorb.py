@@ -134,16 +134,17 @@ class Absorb():
                 label = 'Input'
             else:
                 label = 'Packed'
-
-            Text += "%s %s%10.2f %s" % ("Total",' '+Gkmu+'=',self.Pack*muT/self.Volume,'cm<sup>-1</sup>, ')
-            Text += "%s%10.2f%s" % ('Total '+Gkmu+'R=',self.Radius*self.Pack*muT/(10.0*self.Volume),', ')
-            Text += "%s%10.4f%s<BR>\n" % ('Transmission exp(-2*'+Gkmu+'R)=', \
-                100.0*math.exp(-2*self.Radius*self.Pack*muT/(10.0*self.Volume)),'%')
             Text += '%s' % ('Est. density=')
             Text += '%6.3f %s%.3f %s<BR>\n' % (den,'g/cm'+Pwr3+
                                            ', %s density=' % label,
                                            self.Pack*den,'g/cm'+Pwr3)
+            Text += "%s %s%10.2f %s" % ("Total",' '+Gkmu+'=',self.Pack*muT/self.Volume,'cm<sup>-1</sup>, ')
+            Text += "%s%10.2f%s" % ('Total '+Gkmu+'R=',self.Radius*self.Pack*muT/(10.0*self.Volume),', ')
+            Text += "%s%10.4f%s<BR>\n" % ('Transmission exp(-2*'+Gkmu+'R)=', \
+                100.0*math.exp(-2*self.Radius*self.Pack*muT/(10.0*self.Volume)),'%')
             print Text
+        else: 
+            print "error in Volume computation"
         self.CalcFPPS()
         self.UpDateAbsPlot()
 

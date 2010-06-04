@@ -4,9 +4,22 @@
 		<title>Compute X-ray Absorption</title>
 		<link rel="shortcut icon" href="../images/favicon.ico"> 
 		<link href="../stylesheet.css" rel="stylesheet" type="text/css">
+		
+		<!--javascript to toggle display of hidden text--->
+		<script type="text/javascript">
+		function toggle_visibility(id) {
+		var e = document.getElementById(id);
+		if(e.style.display == 'none')
+		e.style.display = 'block';
+		else
+		e.style.display = 'none';
+		}
+		</script>
+        
 	</head>
 
-<body> 
+<body>
+    
     <table width="100%" border="0" cellpadding="0" cellspacing="3">
 <!-------TOP HEADER-----------------------------------------------TOP HEADER--->
         <tr> 
@@ -44,12 +57,19 @@ if ($mode == "") {
 <!-----MAIN BODY----------------------------------------------------MAIN BODY-->
 
 <h2>Compute X-ray Absorption</h2>
-    <I>Absorption computation utility routine by Robert B. Von Dreele, Matthew R. Suchomel and Brian H. Toby.</I><P>
    <FORM METHOD="GET" ACTION="<?php echo $_SERVER['PHP_SELF']; ?>">
-    <INPUT TYPE="hidden" NAME="mode" value="calc">
+   <INPUT TYPE="hidden" NAME="mode" value="calc">
 
 <B>Select X-ray Wavelength or Energy:</B>
-   <BR>
+   <!-----toggled "details" text ---->
+   <a onclick="toggle_visibility('verbose_spectrum');" style="color:blue; font-size:smaller" > (click for details)</span></a>
+   <br>
+   <span id="verbose_spectrum" style="display:none; color:#444444; font-size:small; font-style:italic">
+	Chose Wavelength or Energy from the pull-down menu
+	<br>Enter valid x-ray wavelength (or energy) in the range 0.05 - 3.0 &Aring; (248 - 4.13keV)
+	<br>Valid range is reduced for high Z elements (Z > 78), see 'more information' in About section below for details
+	<br></span>
+   <!------->
    <SELECT NAME="spectrumtype">
    <OPTION VALUE="Wavelength" SELECTED> Wavelength (&Aring;)
    <OPTION VALUE="Energy"> Energy (keV)
@@ -58,19 +78,49 @@ if ($mode == "") {
 <BR>
 <BR>
 
-<B>Chemical Formula:</B><br>
-    <div style="font-size:small;"><i>enter using element chemical symbol & optional fractional number, e.g. YBa2Cu3O6.5. (Proper capitalization is required).</i></div>
-<input name="formula" size=50 value="">
+<B>Chemical Formula:</B>
+   <!-----toggled "details" text ---->
+   <a onclick="toggle_visibility('verbose_formula');" style="color:blue; font-size:smaller" > (click for details)</span></a>
+   <br>
+   <span id="verbose_formula" style="display:none; color:#444444; font-size:small; font-style:italic">
+	Aspects all elemental symbols in the range H (Z=1) to Cf (Z=98)
+	<br>Note: absorption for H and He is assumed zero and not included in calculation
+	<br>Fractional formula unit occupancies are rounded to the nearest hundredth (0.01)
+	<br>Entered formula (assuming unit cell Z = 1) is used to estimate sample density if "packed faction" is selected below
+	<br></span>
+   <!------->
+   <div style="font-size:small;"><i>enter using element chemical symbol and formula unit occupancy, e.g. YBa2Cu3O6.5 (proper capitalization is required)</i></div>
+   <input name="formula" size=50 value="">
 <BR>
 <BR>
 
-<B>Sample Radius:</B><br>
-<input name="radius" size=5 value="0.35"><span style="font-size:small;"><i>  capillary radius in mm</i></span>
+<B>Sample Radius:</B>
+   <!-----toggled "details" text ---->
+   <a onclick="toggle_visibility('verbose_radius');" style="color:blue; font-size:smaller" > (click for details)</span></a>
+   <br>
+   <span id="verbose_radius" style="display:none; color:#444444; font-size:small; font-style:italic">
+	enter radius (in millimeters) of capillary used for transmission geometry (Debye-Scherrer) powder X-ray diffraciton measurement
+	
+	<br></span>
+   <!------->
+   <input name="radius" size=5 value="0.35"><span style="font-size:small;"><i>  capillary radius in mm</i></span>
 <BR>
 <BR>
  
 <B>Sample Density or Packing Fraction</B>
-<div style="font-size:small;"><i>enter either measured sample density or estimated packing fraction</i></div>
+   <!-----toggled "details" text ---->
+   <a onclick="toggle_visibility('verbose_packing');" style="color:blue; font-size:smaller" > (click for details)</span></a>
+   <br>
+   <span id="verbose_packing" style="display:none; color:#444444; font-size:small; font-style:italic">
+	Select 'Sample Density' or 'Packing Fraction' from the pull-down menu
+	<br>'Sample Density' is more accurate, however 'Packing Fraction' provides a good estimate if real packed sample density is not known.
+	<br>'Sample Density' refers to the actual measured density (in g/cc) of a capillary sample loaded with powder
+	<br>'Packing Fraction' refers to the estimated packing fraction of sample powder in the capillary (often ~ 0.6)
+	<br>When 'Packing Fraction' is selected, the sample density is estimated assuming 10 cubic &Aring; per atom in the entered chemical formula
+	<br>The accuracy of this estimate is typically good to &plusmn; &asymp; 25% of experimental density 
+	<br></span>
+   <!------->
+<div style="font-size:small;"><i>enter measured sample density or estimated packing fraction (often ~0.6)</i></div>
    <SELECT NAME="densitytype">
    <OPTION VALUE="RHO"> Sample Density (g/cc)
    <OPTION SELECTED> Packed Fraction (0.0 - 1.0)
@@ -82,19 +132,27 @@ if ($mode == "") {
 <INPUT TYPE="submit" VALUE="Compute" NAME="submit">
 <INPUT TYPE="reset" VALUE="Clear Form">
 </form>
-<!---- Last Updated------------------------------------------ Last Updated----->
-                            <p align="center" class="mod">
-                                    <script type="text/javascript">
-                                        <!--
-                                        da = new Date(document.lastModified)
-                                        db = da.toGMTString()
-                                        dc = db.split(" ")
-                                        if ( eval( dc[3] ) < 1970 ) dc[3] = eval( dc[3] ) +100
-                                        db = dc[1] + " " + dc[2] + " " + dc[3]
-                                        document.write ( "Last Updated: " + db )
-                                        // -->
-                                    </script>
-                            </p>
+
+<HR>
+
+<span style="font-size:small;"><b>About:</B> This routine estimates capillary sample absorption for transmission geometry (Debye-Scherrer) powder X-ray diffraciton measurements.
+
+<!-----toggled "details" text ---->
+<a onclick="toggle_visibility('verbose_details');" style="color:blue; font-size:inherit" > (click here for more information)</a>
+<span id="verbose_details" style="display:none; color:#444444; font-size:small; font-style:italic">
+	<br>Estimates capillary sample absorption (based on user supplied data and calculated f' & f" values) for elements between Li - Cf and in the x-ray wavelength range 0.05 - 3.0&Aring; (248-4.13keV) using the Cromer & Liberman algorithm <a href="http://dx.doi.org/10.1107/S0567739481000600" target="blank">(reference: Acta Cryst. 1981 v.A37, p.267)</a> and orbital cross-section tables. Note that the Cromer - Liberman algorithm fails in computing f' for wavelengths < 0.16 &Aring; (> 77.48 keV) for the heaviest elements (Au-Cf) and fails to correctly compute f', f" and mu for wavelengths > 2.67 &Aring; (< 4.64 keV) for very heavy elements (Am-Cf).<br></span>
+   <!------->
+
+<span style="font-size:inherit;"><br>Web utility created by Robert B. Von Dreele, Matthew R. Suchomel and Brian H. Toby, based on the python software package <i>Absorb</i> <a href="https://subversion.xor.aps.anl.gov/pyFprime/trunk/" target="blank">(download here)</a>.</span>
+
+<p>
+<a href="http://11bm.xor.aps.anl.gov/home.html">&raquo; Return to 11-BM Homepage</a>
+
+<!-----tLast Modified ---->
+<p>
+<div style="font-size:small; color:#444444;"> Last Modified: June 2010 </div>
+<br>
+
 <?php
  } else {
 #===============================================================================
@@ -209,8 +267,10 @@ if ($mode == "") {
 
     </table>
 
-
+<!--needed for google analytics webpage tracking --->
+<?php
+include ("../googleanalyticstracking.php");
+?>   
 
 </body>
-
 </html>

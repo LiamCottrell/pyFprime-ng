@@ -65,8 +65,8 @@ if ($mode == "") {
    <a onclick="toggle_visibility('verbose_spectrum');" style="color:blue; font-size:smaller" > (click for details)</span></a>
    <br>
    <span id="verbose_spectrum" style="display:none; color:#444444; font-size:small; font-style:italic">
-	Chose Wavelength or Energy from the pull-down menu
-	<br>Enter valid x-ray wavelength (or energy) in the range 0.05 - 3.0 &Aring; (248 - 4.13keV)
+	Select Wavelength or Energy from the pull-down menu
+	<br>Enter valid X-ray wavelength (or energy) in the range 0.05 - 3.0 &Aring; (248 - 4.13keV)
 	<br>Valid range is reduced for high Z elements (Z > 78), see 'more information' in About section below for details
 	<br></span>
    <!------->
@@ -83,7 +83,7 @@ if ($mode == "") {
    <a onclick="toggle_visibility('verbose_formula');" style="color:blue; font-size:smaller" > (click for details)</span></a>
    <br>
    <span id="verbose_formula" style="display:none; color:#444444; font-size:small; font-style:italic">
-	Aspects all elemental symbols in the range H (Z=1) to Cf (Z=98)
+	Accepts all elemental symbols in the range H (Z=1) to Cf (Z=98)
 	<br>Note: absorption for H and He is assumed zero and not included in calculation
 	<br>Fractional formula unit occupancies are rounded to the nearest hundredth (0.01)
 	<br>Entered formula (assuming unit cell Z = 1) is used to estimate sample density if "packed faction" is selected below
@@ -99,7 +99,7 @@ if ($mode == "") {
    <a onclick="toggle_visibility('verbose_radius');" style="color:blue; font-size:smaller" > (click for details)</span></a>
    <br>
    <span id="verbose_radius" style="display:none; color:#444444; font-size:small; font-style:italic">
-	enter radius (in millimeters) of capillary used for transmission geometry (Debye-Scherrer) powder X-ray diffraciton measurement
+	enter radius (in millimeters) of capillary used for transmission geometry (Debye-Scherrer) powder X-ray diffraction measurement
 	
 	<br></span>
    <!------->
@@ -135,18 +135,18 @@ if ($mode == "") {
 
 <HR>
 
-<span style="font-size:small;"><b>About:</B> This routine estimates capillary sample absorption for transmission geometry (Debye-Scherrer) powder X-ray diffraciton measurements.
+<span style="font-size:small;"><b>About:</B> This routine estimates capillary sample absorption for transmission geometry (Debye-Scherrer) powder X-ray diffraction measurements.
 
 <!-----toggled "details" text ---->
 <a onclick="toggle_visibility('verbose_details');" style="color:blue; font-size:inherit" > (click here for more information)</a>
 <span id="verbose_details" style="display:none; color:#444444; font-size:small; font-style:italic">
-	<br>Estimates capillary sample absorption (based on user supplied data and calculated f' & f" values) for elements between Li - Cf and in the x-ray wavelength range 0.05 - 3.0&Aring; (248-4.13keV) using the Cromer & Liberman algorithm <a href="http://dx.doi.org/10.1107/S0567739481000600" target="blank">(reference: Acta Cryst. 1981 v.A37, p.267)</a> and orbital cross-section tables. Note that the Cromer - Liberman algorithm fails in computing f' for wavelengths < 0.16 &Aring; (> 77.48 keV) for the heaviest elements (Au-Cf) and fails to correctly compute f', f" and mu for wavelengths > 2.67 &Aring; (< 4.64 keV) for very heavy elements (Am-Cf).<br></span>
+Capillary sample absorption is estimated (based on user supplied data and calculated f' & f" values) for elements between Li - Cf and in the X-ray wavelength range 0.05 - 3.0&Aring; (248-4.13keV) using the Cromer & Liberman algorithm <a href="http://dx.doi.org/10.1107/S0567739481000600" target="blank">(reference: Acta Cryst. 1981 v.A37, p.267)</a> and orbital cross-section tables. Note that the Cromer - Liberman algorithm fails in computing f' for wavelengths < 0.16 &Aring; (> 77.48 keV) for the heaviest elements (Au-Cf) and fails to correctly compute f', f" and mu for wavelengths > 2.67 &Aring; (< 4.64 keV) for very heavy elements (Am-Cf).</span>
    <!------->
-
-<span style="font-size:inherit;"><br>Web utility created by Robert B. Von Dreele, Matthew R. Suchomel and Brian H. Toby, based on the python software package <i>Absorb</i> <a href="https://subversion.xor.aps.anl.gov/pyFprime/trunk/" target="blank">(download here)</a>.</span>
+   <p>
+<span style="font-size:inherit;">Web utility created by Robert B. Von Dreele, Matthew R. Suchomel and Brian H. Toby, based on the python software package <i>Absorb</i> <a href="https://subversion.xor.aps.anl.gov/pyFprime/trunk/" target="blank">(download here)</a>.</span>
 
 <p>
-<a href="http://11bm.xor.aps.anl.gov/home.html">&raquo; Return to 11-BM Homepage</a>
+<a href="http://11bm.xor.aps.anl.gov/absorption.html">&raquo; Return to 11-BM X-ray absorption webpage</a>
 
 <!-----tLast Modified ---->
 <p>
@@ -211,7 +211,7 @@ if ($mode == "") {
       print '<P><img src="plotimg/' . $imageroot . '">';
       print "<BR><I>".
 	"The plot above shows the absorption for each input element and for " . 
-	"the specified composition as a function of x-ray wavelength/energy." .
+	"the specified composition as a function of X-ray wavelength/energy." .
 	" The blue dotted line indicates a muR value of 1. In a capillary " . 
 	"(Debye-Scherrer) geometry, it is ideal when muR is 1 or below, as ".
 	"sample absorption is minimal and no correction is usually needed. " .

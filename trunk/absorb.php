@@ -64,7 +64,7 @@ if ($mode == "") {
    <!-----toggled "details" text ---->
    <a onclick="toggle_visibility('verbose_spectrum');" style="color:blue; font-size:smaller" > (click for details)</span></a>
    <br>
-   <span id="verbose_spectrum" style="display:none; color:#444444; font-size:small; font-style:italic">
+   <span id="verbose_spectrum" style="display:none; color:#444444; font-size:small; font-style:normal">
 	Select Wavelength or Energy from the pull-down menu
 	<br>Enter valid X-ray wavelength (or energy) in the range 0.05 - 3.0 &Aring; (248 - 4.13keV)
 	<br>Valid range is reduced for high Z elements (Z > 78), see 'more information' in About section below for details
@@ -82,7 +82,7 @@ if ($mode == "") {
    <!-----toggled "details" text ---->
    <a onclick="toggle_visibility('verbose_formula');" style="color:blue; font-size:smaller" > (click for details)</span></a>
    <br>
-   <span id="verbose_formula" style="display:none; color:#444444; font-size:small; font-style:italic">
+   <span id="verbose_formula" style="display:none; color:#444444; font-size:small; font-style:normal">
 	Accepts all elemental symbols in the range H (Z=1) to Cf (Z=98)
 	<br>Note: absorption for H and He is assumed zero and not included in calculation
 	<br>Fractional formula unit occupancies are rounded to the nearest hundredth (0.01)
@@ -98,12 +98,12 @@ if ($mode == "") {
    <!-----toggled "details" text ---->
    <a onclick="toggle_visibility('verbose_radius');" style="color:blue; font-size:smaller" > (click for details)</span></a>
    <br>
-   <span id="verbose_radius" style="display:none; color:#444444; font-size:small; font-style:italic">
-	enter radius (in millimeters) of capillary used for transmission geometry (Debye-Scherrer) powder X-ray diffraction measurement
+   <span id="verbose_radius" style="display:none; color:#444444; font-size:small; font-style:normal">
+	Enter radius (in millimeters) of capillary used for transmission geometry (Debye-Scherrer) powder X-ray diffraction measurement
 	
 	<br></span>
    <!------->
-   <input name="radius" size=5 value="0.35"><span style="font-size:small;"><i>  capillary radius in mm</i></span>
+   <input name="radius" size=5 value="0.40"><span style="font-size:small;"><i>  capillary radius in mm</i></span>
 <BR>
 <BR>
  
@@ -111,7 +111,7 @@ if ($mode == "") {
    <!-----toggled "details" text ---->
    <a onclick="toggle_visibility('verbose_packing');" style="color:blue; font-size:smaller" > (click for details)</span></a>
    <br>
-   <span id="verbose_packing" style="display:none; color:#444444; font-size:small; font-style:italic">
+   <span id="verbose_packing" style="display:none; color:#444444; font-size:small; font-style:normal">
 	Select 'Sample Density' or 'Packing Fraction' from the pull-down menu
 	<br>'Sample Density' is more accurate, however 'Packing Fraction' provides a good estimate if real packed sample density is not known.
 	<br>'Sample Density' refers to the actual measured density (in g/cc) of a capillary sample loaded with powder
@@ -138,8 +138,9 @@ if ($mode == "") {
 <span style="font-size:small;"><b>About:</B> This routine estimates capillary sample absorption for transmission geometry (Debye-Scherrer) powder X-ray diffraction measurements.
 
 <!-----toggled "details" text ---->
-<a onclick="toggle_visibility('verbose_details');" style="color:blue; font-size:inherit" > (click here for more information)</a>
-<span id="verbose_details" style="display:none; color:#444444; font-size:small; font-style:italic">
+<a onclick="toggle_visibility('verbose_details');" style="color:blue; font-size:inherit" >
+<br>(click here for more information)</a>
+<span id="verbose_details" style="display:none; color:#444444; font-size:small; font-style:normal">
 Capillary sample absorption is estimated (based on user supplied data and calculated f' & f" values) for elements between Li - Cf and in the X-ray wavelength range 0.05 - 3.0&Aring; (248-4.13keV) using the Cromer & Liberman algorithm <a href="http://dx.doi.org/10.1107/S0567739481000600" target="blank">(reference: Acta Cryst. 1981 v.A37, p.267)</a> and orbital cross-section tables. Note that the Cromer - Liberman algorithm fails in computing f' for wavelengths < 0.16 &Aring; (> 77.48 keV) for the heaviest elements (Au-Cf) and fails to correctly compute f', f" and mu for wavelengths > 2.67 &Aring; (< 4.64 keV) for very heavy elements (Am-Cf).</span>
    <!------->
    <p>

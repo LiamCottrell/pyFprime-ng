@@ -144,7 +144,7 @@ if ($mode == "") {
 Capillary sample absorption is estimated (based on user supplied data and calculated f' & f" values) for elements between Li - Cf and in the X-ray wavelength range 0.05 - 3.0&Aring; (248-4.13keV) using the Cromer & Liberman algorithm <a href="http://dx.doi.org/10.1107/S0567739481000600" target="blank">(reference: Acta Cryst. 1981 v.A37, p.267)</a> and orbital cross-section tables. Note that the Cromer - Liberman algorithm fails in computing f' for wavelengths < 0.16 &Aring; (> 77.48 keV) for the heaviest elements (Au-Cf) and fails to correctly compute f', f" and mu for wavelengths > 2.67 &Aring; (< 4.64 keV) for very heavy elements (Am-Cf).</span>
    <!------->
    <p>
-<span style="font-size:inherit;">Web utility created by Robert B. Von Dreele, Matthew R. Suchomel and Brian H. Toby, based on the python software package <i>Absorb</i> <a href="https://subversion.xor.aps.anl.gov/pyFprime/trunk/" target="blank">(download here)</a>.</span>
+<span style="font-size:inherit;">Web utility created by Robert B. Von Dreele, Matthew R. Suchomel and Brian H. Toby, based on the python software package <i>Absorb</i> <a href="https://subversion.xor.aps.anl.gov/trac/pyFprime/browser/trunk/" target="blank">(download here)</a>.</span>
 
 <p>
 <a href="http://11bm.xor.aps.anl.gov/absorption.html">&raquo; Return to 11-BM X-ray absorption webpage</a>
@@ -194,7 +194,7 @@ Capillary sample absorption is estimated (based on user supplied data and calcul
    1 => array("pipe", "w"),  // stdout is a pipe that the child will write to
    2 => array("file", "/tmp/absorbplots/error-output.txt", "w") // stderr is a file to write
 			  );
-  $process = proc_open('python /home/joule/WEB11BM/www/absorb/runweb.py', $descriptorspec, $pipes);
+  $process = proc_open('/usr/local/bin/python /home/joule/WEB11BM/www/absorb/runweb.py', $descriptorspec, $pipes);
   if (is_resource($process)) {
     $fp = $pipes[0];
     fwrite($fp, $formula . "\n");

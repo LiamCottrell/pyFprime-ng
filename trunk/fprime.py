@@ -7,18 +7,6 @@ import wx
 import Element
 import numpy as np
 import matplotlib as mpl
-
-try:
-    import wxmpl
-except:
-    # use a copy provided here, select the newer wxmpl when needed
-    (main,sub) = mpl.__version__.split('.')[0:2]
-    if int(main) > 0 or int(sub) > 91: 
-        print "Loading pyFprime distributed wxmpl v1.3.1"
-        import wxmpl131 as wxmpl
-    else:
-        print "Loading pyFprime distributed wxmpl v1.2.9a"
-        import wxmpl129a as wxmpl
 import pylab
 import sys
 
@@ -29,7 +17,6 @@ print "python:     ",sys.version[:5]
 print "wxpython:   ",wx.__version__
 print "matplotlib: ",mpl.__version__
 print "numpy:      ",np.__version__
-print "wxmpl:      ",wxmpl.__version__
 
 def create(parent):
     return Fprime(parent)
@@ -223,7 +210,7 @@ without arguments fprime uses CuKa as default (Wave=1.54052A, E=8.0478keV)
                 self.FFxaxis = 'Q'
             else:
                 self.FFxaxis = 'T'
-            self.UpDateFPlot(self.Wave)
+            self.UpDateFPlot(self.Wave,rePlot=False)
             
         self.choice2 = wx.ComboBox(id=wxID_FPRIMECHOICE2, value=' sin('+Gktheta+')/'+Gklambda,
             choices=[' sin('+Gktheta+')/'+Gklambda,' 2'+Gktheta,' Q'],
@@ -335,11 +322,17 @@ without arguments fprime uses CuKa as default (Wave=1.54052A, E=8.0478keV)
             Wave = self.Kev/(float(self.slider1.GetValue())/1000.)
         self.SetWaveEnergy(Wave)
         
-    def UpDateFPlot(self,Wave):
+    def UpDateFPlot(self,Wave,rePlot=True):
         """Plot f' & f" vs wavelength 0.05-3.0A"""
         "generate a set of form factor curves & plot them vs sin-theta/lambda or q or 2-theta"
+        axylim = []
+        bxylim = []
         try:
             self.fplot.canvas.set_window_title('X-Ray Resonant Scattering')
+            if rePlot:
+                asb,bsb = self.fplot.get_children()[1:]
+                axylim = asb.get_xlim(),asb.get_ylim()
+                bxylim = bsb.get_xlim(),bsb.get_ylim()
             newPlot = False
         except:
             self.fplot = pylab.figure(facecolor='white',figsize=(8,8))  #BTW: default figsize is (8,6)
@@ -431,6 +424,17 @@ without arguments fprime uses CuKa as default (Wave=1.54052A, E=8.0478keV)
             newPlot = False
             pylab.show()
         else:
+            if rePlot:
+                tb = self.fplot.canvas.toolbar
+                tb.push_current()
+                ax.set_xlim(axylim[0])
+                ax.set_ylim(axylim[1])
+                axylim = []
+                tb.push_current()
+                bx.set_xlim(bxylim[0])
+                bx.set_ylim(bxylim[1])
+                bxylim = []
+                tb.push_current()
             pylab.draw()
         
     def OnPick(self, event):
@@ -562,7 +566,7 @@ without arguments fprime uses CuKa as default (Wave=1.54052A, E=8.0478keV)
             self.SpinButton.SetToolTipString('Fine control of energy')
             self.slider1.SetToolTipString('Coarse control of energy')
         self.CalcFPPS()
-        self.UpDateFPlot(self.Wave)
+        self.UpDateFPlot(self.Wave,rePlot=False)
 
     def OnABOUTItems0Menu(self, event):
         info = wx.AboutDialogInfo()

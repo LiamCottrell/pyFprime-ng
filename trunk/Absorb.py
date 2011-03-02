@@ -7,18 +7,6 @@ import wx
 import Element
 import numpy as np
 import matplotlib as mpl
-
-try:
-    import wxmpl
-except:
-    # use a copy provided here, select the newer wxmpl when needed
-    (main,sub) = mpl.__version__.split('.')[0:2]
-    if int(main) > 0 or int(sub) > 91: 
-        print "Loading Absorb distributed wxmpl v1.3.1"
-        import wxmpl131 as wxmpl
-    else:
-        print "Loading Absorb distributed wxmpl v1.2.9a"
-        import wxmpl129a as wxmpl
 import pylab
 import sys
 
@@ -29,7 +17,6 @@ print "python:     ",sys.version[:5]
 print "wxpython:   ",wx.__version__
 print "matplotlib: ",mpl.__version__
 print "numpy:      ",np.__version__
-print "wxmpl:      ",wxmpl.__version__
 
 def create(parent):
     return Fprime(parent)
@@ -492,7 +479,7 @@ without arguments Absorb uses CuKa as default (Wave=1.54052A, E=8.0478keV)
         self.SpinText6.SetValue("%.2f" % (self.Pack))
         self.SpinText6.Update()
         self.CalcFPPS()
-        self.UpDateAbsPlot(Wave)
+        self.UpDateAbsPlot(Wave,rePlot=True)
 
     def CalcFPPS(self):
         """generate f" curves for selected elements
@@ -571,12 +558,16 @@ without arguments Absorb uses CuKa as default (Wave=1.54052A, E=8.0478keV)
             self.SpinButton.SetToolTipString('Fine control of energy')
             self.slider1.SetToolTipString('Coarse control of energy')
         self.CalcFPPS()
-        self.UpDateAbsPlot(self.Wave)
+        self.UpDateAbsPlot(self.Wave,rePlot=False)
         
-    def UpDateAbsPlot(self,Wave):
+    def UpDateAbsPlot(self,Wave,rePlot=True):
         """Plot mu vs wavelength 0.05-3.0A"""
+        xylim = []
         try:
             self.fplot.canvas.set_window_title('X-Ray Absorption')
+            if rePlot:
+                asb = self.fplot.get_children()[1]
+                xylim = asb.get_xlim(),asb.get_ylim()
             newPlot = False
         except:
             self.fplot = pylab.figure(facecolor='white',figsize=(8,6))  #BTW: default figsize is (8,6)
@@ -615,6 +606,13 @@ without arguments Absorb uses CuKa as default (Wave=1.54052A, E=8.0478keV)
             newPlot = False
             pylab.show()
         else:
+            if rePlot:
+                tb = self.fplot.canvas.toolbar
+                tb.push_current()
+                ax.set_xlim(xylim[0])
+                ax.set_ylim(xylim[1])
+                xylim = []
+                tb.push_current()
             pylab.draw()
         
     def OnPick(self, event):

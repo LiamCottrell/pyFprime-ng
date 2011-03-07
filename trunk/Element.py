@@ -300,7 +300,7 @@ class PickElement(wx.Dialog):
     Elem = []
     def _init_ctrls(self, prnt,list):
         wx.Dialog.__init__(self, id=-1, name='PickElement',
-              parent=prnt, pos=wx.DefaultPosition, size=wx.Size(520, 310),
+              parent=prnt, pos=wx.DefaultPosition, size=wx.Size(580, 360),
               style=wx.DEFAULT_DIALOG_STYLE, title='Pick Element')
         panel = wx.Panel(self)
         
@@ -423,7 +423,7 @@ class PickElement(wx.Dialog):
         i=0
         for E in self.ElTable:
             PickElement.ElButton(self,parent=elPanel,name=E[0],
-                pos=wx.Point(E[1]*24+40,E[2]*24+24),tip=E[3],color=E[4])
+                pos=wx.Point(E[1]*30+20,E[2]*30+25),tip=E[3],color=E[4])
             i+=1
         mainSizer.Add(elPanel,0,wx.EXPAND)
         mainSizer.Add((10,10),0)
@@ -459,7 +459,7 @@ class PickElement(wx.Dialog):
         if name in self.Elem:
             color = Black
         El = wscs.ColourSelect(label=name, parent=parent,colour=color,
-            pos=pos, size=wx.Size(24, 23), style=wx.RAISED_BORDER)
+            pos=pos, size=wx.Size(32, 32), style=wx.RAISED_BORDER)
         El.SetBackgroundColour(color)
         El.SetLabel(name)
         El.SetToolTipString(tip)

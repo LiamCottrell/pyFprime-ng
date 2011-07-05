@@ -11,20 +11,17 @@
 from distutils.core import setup
 import os
 import sys
+import fprime
 
 #  http://docs.python.org/distutils/setupscript.html
 #  http://docs.python.org/install/index.html
-
-data_files = [
-    ('.', ['*.dat', 'readme.txt']),
-]
 
 long_description = '''For calculating real and resonant X-ray scattering factors to 250keV;       
 based on Fortran program of Cromer & Liberman corrected for 
 Kissel & Pratt energy term; Jensen term not included'''
 
 setup(name = 'pyFprime',
-      version = '0.2.0',
+      version = fprime.__version__,
       author = 'Robert B. Von Dreele (Argonne National Laboratory)',
       author_email = 'vondreele@anl.gov',
       url         = 'https://subversion.xor.aps.anl.gov/trac/pyFprime',

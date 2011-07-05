@@ -11,6 +11,9 @@
 from distutils.core import setup
 import os
 import sys
+
+# make sure our development source is found FIRST!
+sys.path.insert(0, os.path.abspath('./src/pyFprime'))
 import fprime
 
 #  http://docs.python.org/distutils/setupscript.html

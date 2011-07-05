@@ -14,8 +14,6 @@ import sys
 
 #  http://docs.python.org/distutils/setupscript.html
 #  http://docs.python.org/install/index.html
-#
-# TODO: the install does not put into pyFprime subdir -- want to fix that
 
 data_files = [
     ('.', ['*.dat', 'readme.txt']),

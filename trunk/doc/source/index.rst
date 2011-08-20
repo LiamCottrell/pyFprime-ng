@@ -10,7 +10,7 @@ pyFPRIME and ABSORB
 This project contains two python GUI programs used for computing 
 approximate x-ray scattering cross sections (f, f' and f") for individual 
 elements using the Cromer & Liberman algorithm 
-(reference: `Acta Cryst. 1981 v.A37, p.267 <http://dx.doi.org/S0567739481000600>`_). 
+(reference: `Acta Cryst. 1981 v.A37, p.267 <http://dx.doi.org/10.1107/S0567739481000600>`_). 
 
 * pyFPRIME computes and plots elemental scattering factors. 
 * ABSORB computes scattering and absorption for a given
@@ -34,6 +34,9 @@ python interpreter with WxPython and Matplotlib is installed.
 We have used the Enthought Python Distribution.
 
 Contact: `Robert B. Von Dreele <vondreele@anl.gov>`_
+
+
+Table of Contents:
 
 .. toctree::
    :maxdepth: 1

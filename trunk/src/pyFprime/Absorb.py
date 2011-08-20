@@ -36,6 +36,7 @@ def create(parent):
 [wxID_ABSORBABOUT] = [wx.NewId() for _init_coll_ABOUT_Items in range(1)]
 
 class Absorb(wx.Frame):
+    ''' '''
     Elems = []
     Wave = 1.5405      #CuKa default
     Kev = 12.397639    #keV for 1A x-rays
@@ -636,6 +637,7 @@ without arguments Absorb uses CuKa as default (Wave=1.54052A, E=8.0478keV)
             self.SetWaveEnergy(Wave)
             
     def OnABOUTItems0Menu(self, event):
+        ''' '''
         info = wx.AboutDialogInfo()
         info.Name = 'Absorb'
         info.Version = __version__
@@ -653,6 +655,7 @@ corrected for Kissel & Pratt energy term; Jensen term not included
         wx.AboutBox(info)
 
 class AbsorbApp(wx.App):
+    ''' '''
     def OnInit(self):
         self.main = Absorb(None)
         self.main.Show()
@@ -661,6 +664,7 @@ class AbsorbApp(wx.App):
         return True
 
 def main():
+    ''' '''
     application = AbsorbApp(0)
     application.MainLoop()
 

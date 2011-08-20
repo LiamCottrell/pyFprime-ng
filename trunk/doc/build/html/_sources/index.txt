@@ -1,4 +1,4 @@
-.. $Id$
+.. $Id: index.rst 92 2011-08-20 16:16:49Z jemian $
    pyFprime documentation master file, created by
    sphinx-quickstart on Sat Aug 20 11:11:54 2011.
    You can adapt this file completely to your liking, but it should at least

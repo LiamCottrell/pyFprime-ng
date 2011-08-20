@@ -36,6 +36,7 @@ def create(parent):
 [wxID_FPRIMEABOUT] = [wx.NewId() for _init_coll_ABOUT_Items in range(1)]
 
 class Fprime(wx.Frame):
+    ''' '''
     Elems = []
     Wave = 1.5405      #CuKa default
     Kev = 12.397639    #keV for 1A x-rays
@@ -569,6 +570,7 @@ without arguments fprime uses CuKa as default (Wave=1.54052A, E=8.0478keV)
         self.UpDateFPlot(self.Wave,rePlot=False)
 
     def OnABOUTItems0Menu(self, event):
+        ''' '''
         info = wx.AboutDialogInfo()
         info.Name = 'pyFprime'
         info.Version = __version__
@@ -586,6 +588,7 @@ Kissel & Pratt energy term; Jensen term not included
         wx.AboutBox(info)
 
 class FprimeApp(wx.App):
+    ''' '''
     def OnInit(self):
         self.main = Fprime(None)
         self.main.Show()
@@ -594,6 +597,7 @@ class FprimeApp(wx.App):
         return True
 
 def main():
+    ''' '''
     application = FprimeApp(0)
     application.MainLoop()
 

@@ -14,6 +14,7 @@ import pylab
 import webElement as Element
 
 class Absorb():
+    ''' '''
     Wave = 1.5405      #CuKa default
     Kev = 12.397639    #keV for 1A x-rays
     Wmin = 0.05        #wavelength range

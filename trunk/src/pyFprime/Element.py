@@ -1,5 +1,6 @@
 """Element: functions for element types
-   Copyright: 2008, Robert B. Von Dreele (Argonne National Laboratory)
+
+   :copyright: 2008, Robert B. Von Dreele (Argonne National Laboratory)
 """
 
 import wx
@@ -10,15 +11,19 @@ import  wx.lib.colourselect as wscs
 import wx.lib.buttons as wlb
 
 def GetFormFactorCoeff(El):
-    """Read form factor coefficients from atomdata.asc file
-    @param El: element 1-2 character symbol case irrevelant
-    @return: FormFactors: list of form factor dictionaries
-    each dictionary is:
+    """Read form factor coefficients from ``atomdata.asc`` file
+    
+    :param El: element 1-2 character symbol case irrevelant
+    :return: FormFactors: list of form factor dictionaries
+    
+    each dictionary is::
+    
     'Symbol':4 character element symbol with valence (e.g. 'NI+2')
     'Z': atomic number
     'fa': 4 A coefficients
     'fb': 4 B coefficients
     'fc': C coefficient 
+    
     """
     ElS = El.upper()
     ElS = ElS.rjust(2)
@@ -46,6 +51,7 @@ def GetFormFactorCoeff(El):
     return FormFactors
         
 def GetAtomInfo(El):
+    ''' :param str El: 2 character element symbol '''
     ElS = El.upper().rjust(2)
     filename = os.path.join(sys.path[0],'atmdata.dat')
     try:
@@ -74,19 +80,23 @@ def GetAtomInfo(El):
       
 def GetXsectionCoeff(El):
     """Read atom orbital scattering cross sections for fprime calculations via Cromer-Lieberman algorithm
-    @param El: 2 character element symbol
-    @return: Orbs: list of orbitals each a dictionary with detailed orbital information used by FPcalc
-    each dictionary is:
-    'OrbName': Orbital name read from file
-    'IfBe' 0/2 depending on orbital
-    'BindEn': binding energy
-    'BB': BindEn/0.02721
-    'XSectIP': 5 cross section inflection points
-    'ElEterm': energy correction term
-    'SEdge': absorption edge for orbital
-    'Nval': 10/11 depending on IfBe
-    'LEner': 10/11 values of log(energy)
-    'LXSect': 10/11 values of log(cross section)
+    
+    :param El: 2 character element symbol
+    :return: Orbs: list of orbitals each a dictionary with detailed orbital information used by FPcalc
+    
+    each dictionary is::
+
+        'OrbName': Orbital name read from file
+        'IfBe' 0/2 depending on orbital
+        'BindEn': binding energy
+        'BB': BindEn/0.02721
+        'XSectIP': 5 cross section inflection points
+        'ElEterm': energy correction term
+        'SEdge': absorption edge for orbital
+        'Nval': 10/11 depending on IfBe
+        'LEner': 10/11 values of log(energy)
+        'LXSect': 10/11 values of log(cross section)
+
     """
     AU = 2.80022e+7
     C1 = 0.02721
@@ -153,17 +163,21 @@ def GetXsectionCoeff(El):
     
 def GetMagFormFacCoeff(El):
     """Read magnetic form factor data from atomdata.asc file
-    @param El: 2 character element symbol
-    @return: MagFormFactors: list of all magnetic form factors dictionaries for element El.
-    each dictionary contains:
-    'Symbol':Symbol
-    'Z':Z
-    'mfa': 4 MA coefficients
-    'nfa': 4 NA coefficients
-    'mfb': 4 MB coefficients
-    'nfb': 4 NB coefficients
-    'mfc': MC coefficient
-    'nfc': NC coefficient
+    
+    :param str El: 2 character element symbol
+    :return: MagFormFactors: list of all magnetic form factors dictionaries for element El.
+    
+    each dictionary contains::
+
+        'Symbol':Symbol
+        'Z':Z
+        'mfa': 4 MA coefficients
+        'nfa': 4 NA coefficients
+        'mfb': 4 MB coefficients
+        'nfb': 4 NB coefficients
+        'mfc': MC coefficient
+        'nfc': NC coefficient
+
     """
     ElS = El.upper()
     ElS = ElS.rjust(2)
@@ -197,9 +211,11 @@ def GetMagFormFacCoeff(El):
 
 def ScatFac(FormFac, SThL):
     """compute value of form factor
-    @param FormFac: dictionary  defined in GetFormFactorCoeff 
-    @param SThL: sin-theta/lambda
-    @return: f: real part of form factor
+    
+    :param dict FormFac: dictionary  defined in :meth:`GetFormFactorCoeff()` 
+    :param float SThL: sin-theta/lambda
+    :return: f: real part of form factor
+    :rtype: float
     """
     f = FormFac['fc']
     fa = FormFac['fa']
@@ -210,10 +226,12 @@ def ScatFac(FormFac, SThL):
     return f
             
 def FPcalc(Orbs, KEv):
-    """Compute real & imaginary resonant X-ray scattering factors
-    @param Orbs: list of orbital dictionaries as defined in GetXsectionCoeff
-    @param KEv: x-ray energy in keV
-    @return: C: (f',f",mu): real, imaginary parts of resonant scattering & atomic absorption coeff.
+    """
+    Compute real & imaginary resonant X-ray scattering factors
+    
+    :param list Orbs: list of orbital dictionaries as defined in GetXsectionCoeff
+    :param float KEv: x-ray energy in keV
+    :return: C: (f',f",mu): real, imaginary parts of resonant scattering & atomic absorption coeff.
     """
     def Aitken(Orb, LKev):
         Nval = Orb['Nval']
@@ -296,7 +314,7 @@ def FPcalc(Orbs, KEv):
     
 
 class PickElement(wx.Dialog):
-    "Makes periodic table widget for picking element - caller maintains element list"
+    """Makes periodic table widget for picking element - caller maintains element list"""
     Elem = []
     def _init_ctrls(self, prnt,list):
         wx.Dialog.__init__(self, id=-1, name='PickElement',
@@ -481,7 +499,7 @@ class PickElement(wx.Dialog):
                 self.Elem.append(El)
         
 class DeleteElement(wx.Dialog):
-    "Delete element from selected set widget"
+    """Delete element from selected set widget"""
     def _init_ctrls(self, parent):
         l = len(DeleteElement.Elems)-1
         wx.Dialog.__init__(self, id=-1, name='Delete', parent=parent,

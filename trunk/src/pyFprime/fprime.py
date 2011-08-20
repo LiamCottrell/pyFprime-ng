@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 """main Fprime routines
    Copyright: 2008, Robert B. Von Dreele (Argonne National Laboratory)
 """

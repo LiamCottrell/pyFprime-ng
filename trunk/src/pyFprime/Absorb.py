@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 """main Absorb routines
    Copyright: 2009, Robert B. Von Dreele (Argonne National Laboratory)
 """

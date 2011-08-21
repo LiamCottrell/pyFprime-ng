@@ -72,11 +72,27 @@
 <span class="kn">import</span> <span class="nn">math</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">os.path</span>
-<span class="kn">import</span>  <span class="nn">wx.lib.colourselect</span> <span class="kn">as</span> <span class="nn">wscs</span>
+<span class="kn">import</span> <span class="nn">wx.lib.colourselect</span> <span class="kn">as</span> <span class="nn">wscs</span>
 <span class="kn">import</span> <span class="nn">wx.lib.buttons</span> <span class="kn">as</span> <span class="nn">wlb</span>
 
+
+<span class="n">ATMDATA_FILE</span> <span class="o">=</span> <span class="s">&#39;atmdata.dat&#39;</span>
+<span class="n">XSECT_FILE</span> <span class="o">=</span> <span class="s">&#39;Xsect.dat&#39;</span>
+
+
+<div class="viewcode-block" id="locate_distribution_file"><a class="viewcode-back" href="../../src/Element.html#pyFprime.Element.locate_distribution_file">[docs]</a><span class="k">def</span> <span class="nf">locate_distribution_file</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;locate a standard data file supplied in the distribution directory</span>
+<span class="sd">    </span>
+<span class="sd">    :return: full, absolute path to file, in this directory or None</span>
+<span class="sd">    :rtype: str or None</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">__file__</span><span class="p">)</span> <span class="p">)</span>
+    <span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">{</span><span class="bp">True</span><span class="p">:</span> <span class="n">filename</span><span class="p">,</span> <span class="bp">False</span><span class="p">:</span> <span class="bp">None</span><span class="p">}[</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">filename</span><span class="p">)]</span>
+
+</div>
 <div class="viewcode-block" id="GetFormFactorCoeff"><a class="viewcode-back" href="../../src/Element.html#pyFprime.Element.GetFormFactorCoeff">[docs]</a><span class="k">def</span> <span class="nf">GetFormFactorCoeff</span><span class="p">(</span><span class="n">El</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Read form factor coefficients from ``atomdata.asc`` file</span>
+    <span class="sd">&quot;&quot;&quot;Read form factor coefficients from ``atmdata.dat`` file</span>
 <span class="sd">    </span>
 <span class="sd">    :param El: element 1-2 character symbol case irrevelant</span>
 <span class="sd">    :return: FormFactors: list of form factor dictionaries</span>
@@ -92,11 +108,11 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">ElS</span> <span class="o">=</span> <span class="n">El</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
     <span class="n">ElS</span> <span class="o">=</span> <span class="n">ElS</span><span class="o">.</span><span class="n">rjust</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-    <span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="s">&#39;atmdata.dat&#39;</span><span class="p">)</span>
+    <span class="n">filename</span> <span class="o">=</span> <span class="n">locate_distribution_file</span><span class="p">(</span><span class="n">ATMDATA_FILE</span><span class="p">)</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">FFdata</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span><span class="s">&#39;Ur&#39;</span><span class="p">)</span>
     <span class="k">except</span><span class="p">:</span>
-        <span class="n">wx</span><span class="o">.</span><span class="n">MessageBox</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="s">&quot;File atmdata.dat not found in directory </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+        <span class="n">wx</span><span class="o">.</span><span class="n">MessageBox</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="s">&quot;Could not find or open file: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">filename</span><span class="p">,</span>
             <span class="n">caption</span><span class="o">=</span><span class="s">&quot;No atmdata.dat file&quot;</span><span class="p">,</span><span class="n">style</span><span class="o">=</span><span class="n">wx</span><span class="o">.</span><span class="n">OK</span> <span class="o">|</span> <span class="n">wx</span><span class="o">.</span><span class="n">ICON_EXCLAMATION</span> <span class="o">|</span> <span class="n">wx</span><span class="o">.</span><span class="n">STAY_ON_TOP</span><span class="p">)</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span>
     <span class="n">S</span> <span class="o">=</span> <span class="s">&#39;1&#39;</span>
@@ -118,11 +134,11 @@
 <div class="viewcode-block" id="GetAtomInfo"><a class="viewcode-back" href="../../src/Element.html#pyFprime.Element.GetAtomInfo">[docs]</a><span class="k">def</span> <span class="nf">GetAtomInfo</span><span class="p">(</span><span class="n">El</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39; :param str El: 2 character element symbol &#39;&#39;&#39;</span>
     <span class="n">ElS</span> <span class="o">=</span> <span class="n">El</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="o">.</span><span class="n">rjust</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-    <span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="s">&#39;atmdata.dat&#39;</span><span class="p">)</span>
+    <span class="n">filename</span> <span class="o">=</span> <span class="n">locate_distribution_file</span><span class="p">(</span><span class="n">ATMDATA_FILE</span><span class="p">)</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">FFdata</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span><span class="s">&#39;Ur&#39;</span><span class="p">)</span>
     <span class="k">except</span><span class="p">:</span>
-        <span class="n">wx</span><span class="o">.</span><span class="n">MessageBox</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="s">&quot;File atmdata.dat not found in directory </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+        <span class="n">wx</span><span class="o">.</span><span class="n">MessageBox</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="s">&quot;Could not find or open file: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">filename</span><span class="p">,</span>
             <span class="n">caption</span><span class="o">=</span><span class="s">&quot;No atmdata.dat file&quot;</span><span class="p">,</span><span class="n">style</span><span class="o">=</span><span class="n">wx</span><span class="o">.</span><span class="n">OK</span> <span class="o">|</span> <span class="n">wx</span><span class="o">.</span><span class="n">ICON_EXCLAMATION</span> <span class="o">|</span> <span class="n">wx</span><span class="o">.</span><span class="n">STAY_ON_TOP</span><span class="p">)</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span>
     <span class="n">S</span> <span class="o">=</span> <span class="s">&#39;1&#39;</span>
@@ -167,11 +183,11 @@
     <span class="n">C1</span> <span class="o">=</span> <span class="mf">0.02721</span>
     <span class="n">ElS</span> <span class="o">=</span> <span class="n">El</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
     <span class="n">ElS</span> <span class="o">=</span> <span class="n">ElS</span><span class="o">.</span><span class="n">ljust</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-    <span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="s">&#39;Xsect.dat&#39;</span><span class="p">)</span>
+    <span class="n">filename</span> <span class="o">=</span> <span class="n">locate_distribution_file</span><span class="p">(</span><span class="n">XSECT_FILE</span><span class="p">)</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">xsec</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span><span class="s">&#39;Ur&#39;</span><span class="p">)</span>
     <span class="k">except</span><span class="p">:</span>
-        <span class="n">wx</span><span class="o">.</span><span class="n">MessageBox</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="s">&quot;File Xsect.dat not found in directory </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+        <span class="n">wx</span><span class="o">.</span><span class="n">MessageBox</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="s">&quot;Could not find or open file: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">filename</span><span class="p">,</span>
             <span class="n">caption</span><span class="o">=</span><span class="s">&quot;No Xsect.dat file&quot;</span><span class="p">,</span><span class="n">style</span><span class="o">=</span><span class="n">wx</span><span class="o">.</span><span class="n">OK</span> <span class="o">|</span> <span class="n">wx</span><span class="o">.</span><span class="n">ICON_EXCLAMATION</span> <span class="o">|</span><span class="n">wx</span><span class="o">.</span><span class="n">STAY_ON_TOP</span><span class="p">)</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span>
     <span class="n">S</span> <span class="o">=</span> <span class="s">&#39;1&#39;</span>
@@ -227,7 +243,7 @@
     <span class="k">return</span> <span class="n">Orbs</span>
     </div>
 <div class="viewcode-block" id="GetMagFormFacCoeff"><a class="viewcode-back" href="../../src/Element.html#pyFprime.Element.GetMagFormFacCoeff">[docs]</a><span class="k">def</span> <span class="nf">GetMagFormFacCoeff</span><span class="p">(</span><span class="n">El</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Read magnetic form factor data from atomdata.asc file</span>
+    <span class="sd">&quot;&quot;&quot;Read magnetic form factor data from atmdata.dat file</span>
 <span class="sd">    </span>
 <span class="sd">    :param str El: 2 character element symbol</span>
 <span class="sd">    :return: MagFormFactors: list of all magnetic form factors dictionaries for element El.</span>
@@ -246,11 +262,11 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">ElS</span> <span class="o">=</span> <span class="n">El</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
     <span class="n">ElS</span> <span class="o">=</span> <span class="n">ElS</span><span class="o">.</span><span class="n">rjust</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-    <span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="s">&#39;atmdata.dat&#39;</span><span class="p">)</span>
+    <span class="n">filename</span> <span class="o">=</span> <span class="n">locate_distribution_file</span><span class="p">(</span><span class="n">ATMDATA_FILE</span><span class="p">)</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">FFdata</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span><span class="s">&#39;Ur&#39;</span><span class="p">)</span>
     <span class="k">except</span><span class="p">:</span>
-        <span class="n">wx</span><span class="o">.</span><span class="n">MessageBox</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="s">&quot;File atmdata.dat not found in directory </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+        <span class="n">wx</span><span class="o">.</span><span class="n">MessageBox</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="s">&quot;Could not find or open file: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">filename</span><span class="p">,</span>
             <span class="n">caption</span><span class="o">=</span><span class="s">&quot;No atmdata.dat file&quot;</span><span class="p">,</span><span class="n">style</span><span class="o">=</span><span class="n">wx</span><span class="o">.</span><span class="n">OK</span> <span class="o">|</span> <span class="n">wx</span><span class="o">.</span><span class="n">ICON_EXCLAMATION</span> <span class="o">|</span><span class="n">wx</span><span class="o">.</span><span class="n">STAY_ON_TOP</span><span class="p">)</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span>
     <span class="n">S</span> <span class="o">=</span> <span class="s">&#39;1&#39;</span>
@@ -259,7 +275,7 @@
         <span class="n">S</span> <span class="o">=</span> <span class="n">FFdata</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">S</span><span class="p">[</span><span class="mi">3</span><span class="p">:</span><span class="mi">5</span><span class="p">]</span> <span class="o">==</span> <span class="n">ElS</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">S</span><span class="p">[</span><span class="mi">8</span><span class="p">:</span><span class="mi">9</span><span class="p">]</span> <span class="o">==</span> <span class="s">&#39;M&#39;</span><span class="p">:</span>
-                <span class="n">SN</span> <span class="o">=</span> <span class="n">FFdata</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>               <span class="c">#&#39;N&#39; is assumed to follow &#39;M&#39; in Atomdata.asc</span>
+                <span class="n">SN</span> <span class="o">=</span> <span class="n">FFdata</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>               <span class="c">#&#39;N&#39; is assumed to follow &#39;M&#39; in atmdata.dat</span>
                 <span class="n">Z</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">S</span><span class="p">[:</span><span class="mi">2</span><span class="p">])</span>
                 <span class="n">Symbol</span> <span class="o">=</span> <span class="n">S</span><span class="p">[</span><span class="mi">3</span><span class="p">:</span><span class="mi">7</span><span class="p">]</span>
                 <span class="n">S</span> <span class="o">=</span> <span class="n">S</span><span class="p">[</span><span class="mi">12</span><span class="p">:]</span>

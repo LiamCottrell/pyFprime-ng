@@ -135,7 +135,7 @@
 <dl class="function">
 <dt id="pyFprime.Element.GetFormFactorCoeff">
 <tt class="descclassname">pyFprime.Element.</tt><tt class="descname">GetFormFactorCoeff</tt><big>(</big><em>El</em><big>)</big><a class="reference internal" href="../_modules/pyFprime/Element.html#GetFormFactorCoeff"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyFprime.Element.GetFormFactorCoeff" title="Permalink to this definition">¶</a></dt>
-<dd><p>Read form factor coefficients from <tt class="docutils literal"><span class="pre">atomdata.asc</span></tt> file</p>
+<dd><p>Read form factor coefficients from <tt class="docutils literal"><span class="pre">atmdata.dat</span></tt> file</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -158,7 +158,7 @@
 <dl class="function">
 <dt id="pyFprime.Element.GetMagFormFacCoeff">
 <tt class="descclassname">pyFprime.Element.</tt><tt class="descname">GetMagFormFacCoeff</tt><big>(</big><em>El</em><big>)</big><a class="reference internal" href="../_modules/pyFprime/Element.html#GetMagFormFacCoeff"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyFprime.Element.GetMagFormFacCoeff" title="Permalink to this definition">¶</a></dt>
-<dd><p>Read magnetic form factor data from atomdata.asc file</p>
+<dd><p>Read magnetic form factor data from atmdata.dat file</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -234,6 +234,22 @@
 </tr>
 <tr class="field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">float</p>
 </td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyFprime.Element.locate_distribution_file">
+<tt class="descclassname">pyFprime.Element.</tt><tt class="descname">locate_distribution_file</tt><big>(</big><em>name</em><big>)</big><a class="reference internal" href="../_modules/pyFprime/Element.html#locate_distribution_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyFprime.Element.locate_distribution_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>locate a standard data file supplied in the distribution directory</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Returns:</th><td class="field-body">full, absolute path to file, in this directory or None</td>
+</tr>
+<tr class="field"><th class="field-name">Return type:</th><td class="field-body">str or None</td>
 </tr>
 </tbody>
 </table>

@@ -7,11 +7,27 @@ import wx
 import math
 import sys
 import os.path
-import  wx.lib.colourselect as wscs
+import wx.lib.colourselect as wscs
 import wx.lib.buttons as wlb
 
+
+ATMDATA_FILE = 'atmdata.dat'
+XSECT_FILE = 'Xsect.dat'
+
+
+def locate_distribution_file(name):
+    '''locate a standard data file supplied in the distribution directory
+    
+    :return: full, absolute path to file, in this directory or None
+    :rtype: str or None
+    '''
+    path = os.path.abspath( os.path.dirname(__file__) )
+    filename = os.path.join(path, name)
+    return {True: filename, False: None}[os.path.exists(filename)]
+
+
 def GetFormFactorCoeff(El):
-    """Read form factor coefficients from ``atomdata.asc`` file
+    """Read form factor coefficients from ``atmdata.dat`` file
     
     :param El: element 1-2 character symbol case irrevelant
     :return: FormFactors: list of form factor dictionaries
@@ -27,11 +43,11 @@ def GetFormFactorCoeff(El):
     """
     ElS = El.upper()
     ElS = ElS.rjust(2)
-    filename = os.path.join(sys.path[0],'atmdata.dat')
+    filename = locate_distribution_file(ATMDATA_FILE)
     try:
         FFdata = open(filename,'Ur')
     except:
-        wx.MessageBox(message="File atmdata.dat not found in directory %s" % sys.path[0],
+        wx.MessageBox(message="Could not find or open file: %s" % filename,
             caption="No atmdata.dat file",style=wx.OK | wx.ICON_EXCLAMATION | wx.STAY_ON_TOP)
         sys.exit()
     S = '1'
@@ -53,11 +69,11 @@ def GetFormFactorCoeff(El):
 def GetAtomInfo(El):
     ''' :param str El: 2 character element symbol '''
     ElS = El.upper().rjust(2)
-    filename = os.path.join(sys.path[0],'atmdata.dat')
+    filename = locate_distribution_file(ATMDATA_FILE)
     try:
         FFdata = open(filename,'Ur')
     except:
-        wx.MessageBox(message="File atmdata.dat not found in directory %s" % sys.path[0],
+        wx.MessageBox(message="Could not find or open file: %s" % filename,
             caption="No atmdata.dat file",style=wx.OK | wx.ICON_EXCLAMATION | wx.STAY_ON_TOP)
         sys.exit()
     S = '1'
@@ -102,11 +118,11 @@ def GetXsectionCoeff(El):
     C1 = 0.02721
     ElS = El.upper()
     ElS = ElS.ljust(2)
-    filename = os.path.join(sys.path[0],'Xsect.dat')
+    filename = locate_distribution_file(XSECT_FILE)
     try:
         xsec = open(filename,'Ur')
     except:
-        wx.MessageBox(message="File Xsect.dat not found in directory %s" % sys.path[0],
+        wx.MessageBox(message="Could not find or open file: %s" % filename,
             caption="No Xsect.dat file",style=wx.OK | wx.ICON_EXCLAMATION |wx.STAY_ON_TOP)
         sys.exit()
     S = '1'
@@ -162,7 +178,7 @@ def GetXsectionCoeff(El):
     return Orbs
     
 def GetMagFormFacCoeff(El):
-    """Read magnetic form factor data from atomdata.asc file
+    """Read magnetic form factor data from atmdata.dat file
     
     :param str El: 2 character element symbol
     :return: MagFormFactors: list of all magnetic form factors dictionaries for element El.
@@ -181,11 +197,11 @@ def GetMagFormFacCoeff(El):
     """
     ElS = El.upper()
     ElS = ElS.rjust(2)
-    filename = os.path.join(sys.path[0],'atmdata.dat')
+    filename = locate_distribution_file(ATMDATA_FILE)
     try:
         FFdata = open(filename,'Ur')
     except:
-        wx.MessageBox(message="File atmdata.dat not found in directory %s" % sys.path[0],
+        wx.MessageBox(message="Could not find or open file: %s" % filename,
             caption="No atmdata.dat file",style=wx.OK | wx.ICON_EXCLAMATION |wx.STAY_ON_TOP)
         sys.exit()
     S = '1'
@@ -194,7 +210,7 @@ def GetMagFormFacCoeff(El):
         S = FFdata.readline()
         if S[3:5] == ElS:
             if S[8:9] == 'M':
-                SN = FFdata.readline()               #'N' is assumed to follow 'M' in Atomdata.asc
+                SN = FFdata.readline()               #'N' is assumed to follow 'M' in atmdata.dat
                 Z=int(S[:2])
                 Symbol = S[3:7]
                 S = S[12:]

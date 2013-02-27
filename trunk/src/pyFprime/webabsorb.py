@@ -223,7 +223,7 @@ class Absorb():
                 fppsP2 = np.array(Fpps[2])
                 ax.plot(fppsP1,fppsP2,label=r'$\mu R$ '+Fpps[0])
         if self.ifWave: 
-            ax.set_xlabel(r'$\mathsf{\lambda, \AA}$',fontsize=14)
+            ax.set_xlabel(r'$\mathsf{\lambda\,\left(\AA \right)}$',fontsize=14) 
             ax.axvline(x=Wave,picker=3,color='black')
         else:
             ax.set_xlabel(r'$\mathsf{E, keV}$',fontsize=14)

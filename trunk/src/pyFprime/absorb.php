@@ -30,7 +30,7 @@
                         <td><p>
                             <a href="http://www.aps.anl.gov" class="sectionTitle">Advanced Photon Source<br></a>
                             <img src="../images/spacer.gif" width="1" height="5" border="0" alt=""><br>
-			    <a href="http://11bm.xor.aps.anl.gov" class="whiteText">Compute X-ray Absorption<br></a>
+			    <a href="http://11bm.xray.aps.anl.gov" class="whiteText">Compute X-ray Absorption<br></a>
                         </p></td>
                     <td class="rightbanner"><a href="http://www.energy.gov/"><img src="../images/header_doe.gif" alt="US Dept. of Energy" border="0"></a></td>
                 </tr>
@@ -70,11 +70,20 @@ if ($mode == "") {
 	<br>Valid range is reduced for high Z elements (Z > 78), see 'more information' in About section below for details
 	<br></span>
    <!------->
+   <!---?? Add flag to URL to define spectrumtype selection ??---->
    <SELECT NAME="spectrumtype">
    <OPTION VALUE="Wavelength" SELECTED> Wavelength (&Aring;)
    <OPTION VALUE="Energy"> Energy (keV)
    </SELECT>
-   <input name="spectrum" size=20 value="0.41">
+   <!------->
+   <?php
+   if (!isset($_GET['spectrum'])) {
+	$_GET['spectrum']="0.41";
+   }
+   ?>
+   <input name="spectrum" size=20 value="<?php print $_GET['spectrum']?>">
+   <!------->
+   <!-----<input name="spectrum" size=20 value="0.41">-->   
 <BR>
 <BR>
 
@@ -144,10 +153,10 @@ if ($mode == "") {
 Capillary sample absorption is estimated (based on user supplied data and calculated f' & f" values) for elements between Li - Cf and in the X-ray wavelength range 0.05 - 3.0&Aring; (248-4.13keV) using the Cromer & Liberman algorithm <a href="http://dx.doi.org/10.1107/S0567739481000600" target="blank">(reference: Acta Cryst. 1981 v.A37, p.267)</a> and orbital cross-section tables. Note that the Cromer - Liberman algorithm fails in computing f' for wavelengths < 0.16 &Aring; (> 77.48 keV) for the heaviest elements (Au-Cf) and fails to correctly compute f', f" and mu for wavelengths > 2.67 &Aring; (< 4.64 keV) for very heavy elements (Am-Cf).</span>
    <!------->
    <p>
-<span style="font-size:inherit;">Web utility created by Robert B. Von Dreele, Matthew R. Suchomel and Brian H. Toby, based on the python software package <i>Absorb</i> <a href="https://subversion.xor.aps.anl.gov/trac/pyFprime/browser/trunk/" target="blank">(download here)</a>.</span>
+<span style="font-size:inherit;">Web utility created by Robert B. Von Dreele, Matthew R. Suchomel and Brian H. Toby, based on the python software package <i>Absorb</i> <a href="https://subversion.xray.aps.anl.gov/trac/pyFprime/browser/trunk/" target="blank">(download here)</a>.</span>
 
 <p>
-<a href="http://11bm.xor.aps.anl.gov/absorption.html">&raquo; Return to 11-BM X-ray absorption webpage</a>
+<a href="http://11bm.xray.aps.anl.gov/absorption.html">&raquo; Return to 11-BM X-ray absorption webpage</a>
 
 <!-----tLast Modified ---->
 <p>

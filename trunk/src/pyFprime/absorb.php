@@ -227,7 +227,7 @@ Capillary sample absorption is estimated (based on user supplied data and calcul
   #$process = proc_open('/usr/local/bin/python /home/joule/WEB11BM/www/absorb/runweb.py', $descriptorspec, $pipes);
   #$process = proc_open('/usr/bin/python /home/joule/WEB11BM/www/absorb/runweb.py', $descriptorspec, $pipes);
   $process = proc_open('/APSshare/epd/rh6-x86/bin/python /home/joule/WEB11BM/www/absorb/runweb.py', $descriptorspec, $pipes);
- 
+
   if (is_resource($process)) {
     $fp = $pipes[0];
     fwrite($fp, $formula . "\n");
@@ -254,8 +254,15 @@ Capillary sample absorption is estimated (based on user supplied data and calcul
 	"geometry, as there will be very severe levels of absorption and ".
 	"corrections are inaccurate.</I>";
     } else {
-      print "<H3>An error occurred running the script, please check your input</H3>";
-    }
+      print "<H4>Sorry; there is an error with your entered information or with this webpage.";
+      print "<H4>Please fix your information and try again, or send details of the webpage error to 11-BM@aps.anl.gov.";
+      // debug code
+      $contents = file("/tmp/absorbplots/error-output.txt");
+      $string = implode($contents);
+      print "<PRE>";
+      echo $string;
+      print "</PRE>";
+      }
   } else {
     print "no process created<BR>";
   }

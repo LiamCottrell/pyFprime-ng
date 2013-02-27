@@ -175,8 +175,13 @@ Capillary sample absorption is estimated (based on user supplied data and calcul
 <a href="http://11bm.xray.aps.anl.gov/absorption.html">&raquo; Return to 11-BM X-ray absorption webpage</a>
 
 <!-----tLast Modified ---->
+
 <p>
-<div style="font-size:small; color:#444444;"> Last Modified: June 2010 </div>
+<div style="font-size:small; color:#444444;"> <B>New feature</B>: define your own custom absorb.php bookmark with default wavelength settings (or sample radius etc)</div>
+<div> Example: try the URL <a href="http://11bm.xray.aps.anl.gov/absorb/absorb.php?spectrum=1.54&radius=0.5&density=1.0"> http://11bm.xray.aps.anl.gov/absorb/absorb.php?<b>spectrum=1.54&radius=0.5&density=1.0</b></a></div>
+<p>
+	
+<div style="font-size:small; color:#444444;"> Last Modified: Feb 2013 </div>
 <br>
 
 <?php

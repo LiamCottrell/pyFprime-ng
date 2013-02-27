@@ -18,7 +18,7 @@ class Absorb():
     Wave = 1.5405      #CuKa default
     Kev = 12.397639    #keV for 1A x-rays
     Wmin = 0.05        #wavelength range
-    Wmax = 3.0
+    Wmax = 2.0
     Wres = 0.004094    #plot resolution step size as const delta-lam/lam - gives 1000 steps for Wmin to Wmax
     Eres = 1.5e-4      #typical energy resolution for synchrotron x-ray sources
     Energy = Kev/Wave
@@ -200,7 +200,7 @@ class Absorb():
         self.FPPS = FPPS
 
     def UpDateAbsPlot(self):
-        """Plot mu vs wavelength 0.05-3.0A"""
+        """Plot mu vs wavelength 0.05-2.0A"""
         Wave = self.Wave
         try:
             self.fplot.canvas.set_window_title('X-Ray Absorption')

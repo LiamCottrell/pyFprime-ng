@@ -136,12 +136,21 @@ if ($mode == "") {
 	<br>The accuracy of this estimate is typically good to &plusmn; &asymp; 25% of experimental density 
 	<br></span>
    <!------->
+   <!---?? Add flag to URL to define densitytype selection ??---->
 <div style="font-size:small;"><i>enter measured sample density or estimated packing fraction (often ~0.6)</i></div>
    <SELECT NAME="densitytype">
    <OPTION VALUE="RHO"> Sample Density (g/cc)
    <OPTION SELECTED> Packed Fraction (0.0 - 1.0)
    </SELECT>
-   <input name="density" size=10 value="0.6">
+   <!------->
+   <?php
+   if (!isset($_GET['density'])) {
+	$_GET['density']="0.5";
+   }
+   ?>
+   <input name="density" size=10 value="<?php print $_GET['density']?>">
+   <!------->
+   <!--<input name="density" size=10 value="0.5">-->
 <BR>
 <BR>
  

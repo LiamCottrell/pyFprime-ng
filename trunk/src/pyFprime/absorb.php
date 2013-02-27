@@ -180,7 +180,7 @@ Capillary sample absorption is estimated (based on user supplied data and calcul
 <div style="font-size:small; color:#444444;"> <B>New feature</B>: define your own custom absorb.php bookmark with default wavelength settings (or sample radius etc)</div>
 <div> Example: try the URL <a href="http://11bm.xray.aps.anl.gov/absorb/absorb.php?spectrum=1.54&radius=0.5&density=1.0"> http://11bm.xray.aps.anl.gov/absorb/absorb.php?<b>spectrum=1.54&radius=0.5&density=1.0</b></a></div>
 <p>
-	
+
 <div style="font-size:small; color:#444444;"> Last Modified: Feb 2013 </div>
 <br>
 
@@ -224,9 +224,10 @@ Capillary sample absorption is estimated (based on user supplied data and calcul
    1 => array("pipe", "w"),  // stdout is a pipe that the child will write to
    2 => array("file", "/tmp/absorbplots/error-output.txt", "w") // stderr is a file to write
 			  );
+  #$process = proc_open('/usr/local/bin/python /home/joule/WEB11BM/www/absorb/runweb.py', $descriptorspec, $pipes);
   #$process = proc_open('/usr/bin/python /home/joule/WEB11BM/www/absorb/runweb.py', $descriptorspec, $pipes);
   $process = proc_open('/APSshare/epd/rh6-x86/bin/python /home/joule/WEB11BM/www/absorb/runweb.py', $descriptorspec, $pipes);
-  
+ 
   if (is_resource($process)) {
     $fp = $pipes[0];
     fwrite($fp, $formula . "\n");

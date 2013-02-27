@@ -83,7 +83,7 @@ if ($mode == "") {
    ?>
    <input name="spectrum" size=20 value="<?php print $_GET['spectrum']?>">
    <!------->
-   <!-----<input name="spectrum" size=20 value="0.41">-->   
+   <!-----<input name="spectrum" size=20 value="0.41">-->
 <BR>
 <BR>
 
@@ -112,7 +112,14 @@ if ($mode == "") {
 	
 	<br></span>
    <!------->
-   <input name="radius" size=5 value="0.40"><span style="font-size:small;"><i>  capillary radius in mm</i></span>
+   <?php
+   if (!isset($_GET['radius'])) {
+	$_GET['radius']="0.40";
+   }
+   ?>
+   <input name="radius" size=5 value="<?php print $_GET['radius']?>"><span style="font-size:small;"><i>  capillary radius in mm</i></span>
+   <!------->
+   <!--<input name="radius" size=5 value="0.40"><span style="font-size:small;"><i>  capillary radius in mm</i></span>-->
 <BR>
 <BR>
  

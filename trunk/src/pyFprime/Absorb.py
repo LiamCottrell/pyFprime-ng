@@ -166,7 +166,7 @@ without arguments Absorb uses CuKa as default (Wave=1.54052A, E=8.0478keV)
 
     def _init_ctrls(self, parent):
         wx.Frame.__init__(self, parent=parent,
-              size=wx.Size(500, 300),style=wx.DEFAULT_FRAME_STYLE, title='Absorb')              
+              size=wx.Size(500, 400),style=wx.DEFAULT_FRAME_STYLE, title='Absorb')              
         self._init_utils()
         self.SetMenuBar(self.menuBar1)
         self.DrawPanel()
@@ -435,6 +435,8 @@ without arguments Absorb uses CuKa as default (Wave=1.54052A, E=8.0478keV)
                 self.Volume += 10.*Elem[2]
         muT = 0
         Mass = 0
+        Fo = 0
+        Fop = 0
         for Elem in self.Elems:
             Mass += self.Zcell*Elem[2]*Elem[5]['Mass']
             r1 = Element.FPcalc(Elem[4],E+DE)
@@ -442,6 +444,7 @@ without arguments Absorb uses CuKa as default (Wave=1.54052A, E=8.0478keV)
             Els = Elem[0]
             Els = Els.ljust(2).lower().capitalize()
             mu = 0
+            Fo += Elem[2]*Elem[1]
             if Elem[1] > 78 and self.Energy+DE > self.Kev/0.16:
                 mu = self.Zcell*Elem[2]*(r1[2]+r2[2])/2.0
                 Text += "%s\t%s%8.2f  %s%6s  %s%6.3f  %s%10.2f %s\n" %    (
@@ -454,6 +457,7 @@ without arguments Absorb uses CuKa as default (Wave=1.54052A, E=8.0478keV)
                     ' f"=','not valid',' '+Gkmu+'=','not valid')
             else:
                 mu = self.Zcell*Elem[2]*(r1[2]+r2[2])/2.0
+                Fop += Elem[2]*(Elem[1]+(r1[0]+r2[0])/2.0)
                 Text += "%s\t%s%8.2f  %s%6.3f  %s%6.3f  %s%10.2f %s\n" %    (
                     'Element= '+str(Els),"N = ",Elem[2]," f'=",(r1[0]+r2[0])/2.0,
                     ' f"=',(r1[1]+r2[1])/2.0,' '+Gkmu+'=',mu,'barns')
@@ -471,6 +475,9 @@ without arguments Absorb uses CuKa as default (Wave=1.54052A, E=8.0478keV)
             else:  
                 Text += '%s' % ('Est. density=')
             Text += '%6.3f %s%.3f %s\n' % (den,'g/cm'+Pwr3+', Powder density=',self.Pack*den,'g/cm'+Pwr3)
+            Text += '%s%10.2f%s\n'%('X-ray small angle scattering contrast',(28.179*Fo/self.Volume)**2,'*10**20/cm4')
+            if Fop:
+                Text += '%s%10.2f%s\n'%('Anomalous X-ray small angle scattering contrast',(28.179*Fop/self.Volume)**2,'*10**20/cm4')
             self.Results.SetValue(Text)
         self.Results.Update()
         self.SpinText3.SetValue("%.2f" % (self.Volume))
@@ -650,7 +657,7 @@ This product includes software developed
 by the UChicago Argonne, LLC, as 
 Operator of Argonne National Laboratory.        '''
         info.Description = '''
-For calculating X-ray absorbtion factors to 250keV for cylindrical      
+For calculating X-ray absorption factors to 250keV for cylindrical      
 powder samples; based on Fortran program Fprime of Cromer & Liberman 
 corrected for Kissel & Pratt energy term; Jensen term not included
         '''

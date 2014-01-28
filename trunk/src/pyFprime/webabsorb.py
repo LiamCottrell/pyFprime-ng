@@ -98,6 +98,8 @@ class Absorb():
             self.Volume += 10.*Elem[2]
         muT = 0
         Mass = 0
+        Fo = 0
+        Fop = 0
         Text += "Wavelength = %.4f Angstrom<BR>\n" % (self.Wave)
         Text += "Energy     = %.4f KeV<BR>\n" % (self.Energy)
         Text += "Sample Radius = %.2f mm (diameter=%.2f mm)<BR>\n" % (self.Radius,
@@ -110,6 +112,7 @@ class Absorb():
             Els = Elem[0]
             Els = Els.ljust(2).lower().capitalize()
             mu = 0
+            Fo += Elem[2]*Elem[1]
             if Elem[1] > 78 and self.Energy+DE > self.Kev/0.16:
                 mu = self.Zcell*Elem[2]*(r1[2]+r2[2])/2.0
                 Text += "%s\t%s%8.2f  %s%6s  %s%6.3f  %s%10.2f %s\n" %    (
@@ -122,6 +125,7 @@ class Absorb():
                     ' f"=','not valid',' '+Gkmu+'=','not valid')
             else:
                 mu = self.Zcell*Elem[2]*(r1[2]+r2[2])/2.0
+                Fop += Elem[2]*(Elem[1]+(r1[0]+r2[0])/2.0)
                 Text += "%s\t%s%8.2f  %s%6.3f  %s%6.3f  %s%10.2f %s\n" %    (
                     'Element= '+str(Els),"N = ",Elem[2]," f'=",(r1[0]+r2[0])/2.0,
                     ' f"=',(r1[1]+r2[1])/2.0,' '+Gkmu+'=',mu,'barns')
@@ -141,8 +145,11 @@ class Absorb():
                                            self.Pack*den,'g/cm'+Pwr3)
             Text += "%s %s%10.2f %s" % ("Total",' '+Gkmu+'=',self.Pack*muT/self.Volume,'cm<sup>-1</sup>, ')
             Text += "%s%10.2f%s" % ('Total '+Gkmu+'R=',self.Radius*self.Pack*muT/(10.0*self.Volume),', ')
-            Text += "%s%10.4f%s<BR>\n" % ('Transmission exp(-2*'+Gkmu+'R)=', \
+            Text += "%s%10.4f%s<BR>\n" % ('Transmission exp(-2'+Gkmu+'R)=', \
                 100.0*math.exp(-2*self.Radius*self.Pack*muT/(10.0*self.Volume)),'%')
+            Text += '%s%10.2f%s\n'%('X-ray small angle scattering contrast',(28.179*Fo/self.Volume)**2,'*10<sup>20/cm<sup>')
+            if Fop:
+                Text += '%s%10.2f%s\n'%('Anomalous X-ray small angle scattering contrast',(28.179*Fop/self.Volume)**2,'*10<sup>20/cm<sup>')
             print Text
         else: 
             print "error in Volume computation"

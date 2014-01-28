@@ -413,6 +413,9 @@ without arguments Absorb uses CuKa as default (Wave=1.54052A, E=8.0478keV)
     def SetWaveEnergy(self,Wave):
         Gkmu = unichr(0x3bc)
         Pwr3 = unichr(0x0b3)
+        Pwr4 = unichr(0x2074)
+        Pwr20 = unichr(0x0b2)+unichr(0x0b0)
+        Pwrm1 = unichr(0x207b)+unichr(0x0b9)
         self.Wave = Wave
         self.Energy = self.Kev/self.Wave
         self.Energy = round(self.Energy,4)
@@ -464,9 +467,9 @@ without arguments Absorb uses CuKa as default (Wave=1.54052A, E=8.0478keV)
             muT += mu
         
         if self.Volume:
-            Text += "%s %s%10.2f %s" % ("Total",' '+Gkmu+'=',self.Pack*muT/self.Volume,'cm-1, ')
+            Text += "%s %s%10.2f %s" % ("Total",' '+Gkmu+'=',self.Pack*muT/self.Volume,'cm'+Pwrm1+', ')
             Text += "%s%10.2f%s" % ('Total '+Gkmu+'R=',self.Radius*self.Pack*muT/(10.0*self.Volume),', ')
-            Text += "%s%10.4f%s\n" % ('Transmission exp(-2*'+Gkmu+'R)=', \
+            Text += "%s%10.4f%s\n" % ('Transmission exp(-2'+Gkmu+'R)=', \
                 100.0*math.exp(-2*self.Radius*self.Pack*muT/(10.0*self.Volume)),'%')
             self.Results.SetValue(Text)
             den = Mass/(0.602*self.Volume)                
@@ -475,9 +478,9 @@ without arguments Absorb uses CuKa as default (Wave=1.54052A, E=8.0478keV)
             else:  
                 Text += '%s' % ('Est. density=')
             Text += '%6.3f %s%.3f %s\n' % (den,'g/cm'+Pwr3+', Powder density=',self.Pack*den,'g/cm'+Pwr3)
-            Text += '%s%10.2f%s\n'%('X-ray small angle scattering contrast',(28.179*Fo/self.Volume)**2,'*10**20/cm4')
+            Text += '%s%10.2f%s\n'%('X-ray small angle scattering contrast',(28.179*Fo/self.Volume)**2,'*10'+Pwr20+'/cm'+Pwr4)
             if Fop:
-                Text += '%s%10.2f%s\n'%('Anomalous X-ray small angle scattering contrast',(28.179*Fop/self.Volume)**2,'*10**20/cm4')
+                Text += '%s%10.2f%s\n'%('Anomalous X-ray small angle scattering contrast',(28.179*Fop/self.Volume)**2,'*10'+Pwr20+'/cm'+Pwr4)
             self.Results.SetValue(Text)
         self.Results.Update()
         self.SpinText3.SetValue("%.2f" % (self.Volume))

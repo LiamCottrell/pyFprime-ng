@@ -14,11 +14,12 @@ import sys
 
 __version__ = '0.2.0'
 # print versions
-print "Installed python module versions in use in pyFprime v.",__version__,":"
-print "python:     ",sys.version[:5]
-print "wxpython:   ",wx.__version__
-print "matplotlib: ",mpl.__version__
-print "numpy:      ",np.__version__
+print ("Installed python module versions in use in pyFprime v.",__version__,":")
+print ("python:     ",sys.version[:5])
+print ("wxpython:   ",wx.__version__)
+print ("matplotlib: ",mpl.__version__)
+print ("numpy:      ",np.__version__)
+print(wx.version())
 
 def create(parent):
     return Fprime(parent)
@@ -49,13 +50,13 @@ class Fprime(wx.Frame):
             E = float(arg.split('-e')[1])
             Wave = Kev/E
         elif '-h' in arg:
-            print '''
+            print( '''
 fprime.py can take the following arguments:
 -h   -  this help listing
 -wv  -  set default wavelength to v, e.g. -w1.54 sets wavelength to 1.54A
 -ev  -  set default energy to v, e.g. -e27 sets energy to 27keV
 without arguments fprime uses CuKa as default (Wave=1.54052A, E=8.0478keV)
-'''
+''')
             sys.exit()
     Wmin = 0.05        #wavelength range
     Wmax = 3.0
@@ -68,8 +69,7 @@ without arguments fprime uses CuKa as default (Wave=1.54052A, E=8.0478keV)
     FFxaxis = 'S'      #default form factor plot is vs sin(theta)/lambda
     def _init_coll_ABOUT_Items(self, parent):
 
-        parent.Append(help='', id=wxID_FPRIMEABOUT, kind=wx.ITEM_NORMAL,
-              text='About')
+        parent.Append(wxID_FPRIMEABOUT, 'About')
         self.Bind(wx.EVT_MENU, self.OnABOUTItems0Menu, id=wxID_FPRIMEABOUT)
 
     def _init_coll_menuBar1_Menus(self, parent):
@@ -81,24 +81,15 @@ without arguments fprime uses CuKa as default (Wave=1.54052A, E=8.0478keV)
     def _init_coll_KALPHA_Items(self, parent):
         "Set of characteristic radiation from sealed tube sources"
 
-        parent.Append(help='', id=wxID_FPRIMEKALPHACRKA, kind=wx.ITEM_NORMAL,
-              text='CrKa')
-        parent.Append(help='', id=wxID_FPRIMEKALPHAMNKA, kind=wx.ITEM_NORMAL,
-              text='MnKa')
-        parent.Append(help='', id=wxID_FPRIMEKALPHAFEKA, kind=wx.ITEM_NORMAL,
-              text='FeKa')
-        parent.Append(help='', id=wxID_FPRIMEKALPHACOKA, kind=wx.ITEM_NORMAL,
-              text='CoKa')
-        parent.Append(help='', id=wxID_FPRIMEKALPHANIKA, kind=wx.ITEM_NORMAL,
-              text='NiKa')
-        parent.Append(help='', id=wxID_FPRIMEKALPHACUKA, kind=wx.ITEM_NORMAL,
-              text='CuKa')
-        parent.Append(help='', id=wxID_FPRIMEKALPHAZNKA, kind=wx.ITEM_NORMAL,
-              text='ZnKa')
-        parent.Append(help='', id=wxID_FPRIMEKALPHAMOKA, kind=wx.ITEM_NORMAL,
-              text='MoKa')
-        parent.Append(help='', id=wxID_FPRIMEKALPHAAGKA, kind=wx.ITEM_NORMAL,
-              text='AgKa')
+        parent.Append(wxID_FPRIMEKALPHACRKA,'CrKa')
+        parent.Append(wxID_FPRIMEKALPHAMNKA,'MnKa')
+        parent.Append(wxID_FPRIMEKALPHAFEKA,'FeKa')
+        parent.Append(wxID_FPRIMEKALPHACOKA,'CoKa')
+        parent.Append(wxID_FPRIMEKALPHANIKA,'NiKa')
+        parent.Append(wxID_FPRIMEKALPHACUKA,'CuKa')
+        parent.Append(wxID_FPRIMEKALPHAZNKA,'ZnKa')
+        parent.Append(wxID_FPRIMEKALPHAMOKA,'MoKa')
+        parent.Append(wxID_FPRIMEKALPHAAGKA,'AgKa')
         self.Bind(wx.EVT_MENU, self.OnKALPHACrkaMenu, id=wxID_FPRIMEKALPHACRKA)
         self.Bind(wx.EVT_MENU, self.OnKALPHAMnkaMenu, id=wxID_FPRIMEKALPHAMNKA)
         self.Bind(wx.EVT_MENU, self.OnKALPHAFekaMenu, id=wxID_FPRIMEKALPHAFEKA)
@@ -110,13 +101,10 @@ without arguments fprime uses CuKa as default (Wave=1.54052A, E=8.0478keV)
         self.Bind(wx.EVT_MENU, self.OnKALPHAAgkaMenu, id=wxID_FPRIMEKALPHAAGKA)
 
     def _init_coll_FPRIME_Items(self, parent):
-        parent.Append(help='Add new element', id=wxID_FPRIMENEW, kind=wx.ITEM_NORMAL,
-              text='&New Element')
-        self.Delete = parent.Append(help='Delete an element', id=wxID_FPRIMEDELETE, kind=wx.ITEM_NORMAL,
-              text='&Delete Element')
+        parent.Append(wxID_FPRIMENEW,'&New Element','Add new element')
+        self.Delete = parent.Append(wxID_FPRIMEDELETE,'&Delete Element','Delete an element')
         self.Delete.Enable(False)
-        parent.Append(help='Exit Fprime', id=wxID_FPRIMEEXIT, kind=wx.ITEM_NORMAL,
-              text='&Exit')
+        parent.Append(wxID_FPRIMEEXIT,'&Exit','Exit Fprime')
         self.Bind(wx.EVT_MENU, self.OnFPRIMEExitMenu, id=wxID_FPRIMEEXIT)
         self.Bind(wx.EVT_MENU, self.OnFPRIMENewMenu, id=wxID_FPRIMENEW)
         self.Bind(wx.EVT_MENU, self.OnFPRIMEDeleteMenu, id=wxID_FPRIMEDELETE)
@@ -161,7 +149,6 @@ without arguments fprime uses CuKa as default (Wave=1.54052A, E=8.0478keV)
               size=wx.Size(100,20), value = "%6.4f" % (self.Wave),style=wx.TE_PROCESS_ENTER )
         selSizer.Add(self.SpinText1,0)
         selSizer.Add((5,10),0)
-        self.SpinText1.SetToolTipString('Enter desired wavelength & Enter')
         self.SpinText1.Bind(wx.EVT_TEXT_ENTER, self.OnSpinText1, id=wxID_SPINTEXT1)
         
         selSizer.Add(wx.StaticText(parent=panel, label='Energy:'),0,
@@ -170,7 +157,6 @@ without arguments fprime uses CuKa as default (Wave=1.54052A, E=8.0478keV)
         self.SpinText2 = wx.TextCtrl(id=wxID_SPINTEXT2, parent=panel, 
               size=wx.Size(100,20), value = "%7.4f" % (self.Energy),style=wx.TE_PROCESS_ENTER) 
         selSizer.Add(self.SpinText2,0)
-        self.SpinText2.SetToolTipString('Enter desired energy & Enter')
         self.SpinText2.Bind(wx.EVT_TEXT_ENTER, self.OnSpinText2, id=wxID_SPINTEXT2)
         mainSizer.Add(selSizer,0)
         mainSizer.Add((10,10),0)
@@ -179,7 +165,6 @@ without arguments fprime uses CuKa as default (Wave=1.54052A, E=8.0478keV)
         self.SpinButton = wx.SpinButton(id=wxID_SPINBUTTON, parent=panel, 
               size=wx.Size(25,24), style=wx.SP_VERTICAL | wx.SP_ARROW_KEYS)
         slideSizer.Add(self.SpinButton,0,wx.ALIGN_RIGHT)
-        self.SpinButton.SetToolTipString('Fine control of wavelength')
         self.SpinButton.SetRange(int(10000.*self.Wmin),int(10000.*self.Wmax))
         self.SpinButton.SetValue(int(10000.*self.Wave))
         self.SpinButton.Bind(wx.EVT_SPIN, self.OnSpinButton, id=wxID_SPINBUTTON)
@@ -188,7 +173,6 @@ without arguments fprime uses CuKa as default (Wave=1.54052A, E=8.0478keV)
             minValue=int(1000.*self.Wmin), parent=panel,style=wx.SL_HORIZONTAL,
             value=int(self.Wave*1000.), )
         slideSizer.Add(self.slider1,1,wx.EXPAND|wx.ALIGN_RIGHT)
-        self.slider1.SetToolTipString('Coarse control of wavelength')
         self.slider1.Bind(wx.EVT_SLIDER, self.OnSlider1, id=wxID_FPRIMESLIDER1)
         mainSizer.Add(slideSizer,0,wx.EXPAND)
         mainSizer.Add((10,10),0)
@@ -203,7 +187,6 @@ without arguments fprime uses CuKa as default (Wave=1.54052A, E=8.0478keV)
              choices=['Wavelength','Energy'],style=wx.CB_READONLY|wx.CB_DROPDOWN)
         choiceSizer.Add(self.choice1,0)
         choiceSizer.Add((10,10),0)
-        self.choice1.SetToolTipString('Switch between wavelength and energy scale')
         self.choice1.Bind(wx.EVT_COMBOBOX, self.OnChoice1, id=wxID_FPRIMECHOICE1)
 
         def OnChoice2(event):
@@ -219,7 +202,6 @@ without arguments fprime uses CuKa as default (Wave=1.54052A, E=8.0478keV)
             choices=[' sin('+Gktheta+')/'+Gklambda,' 2'+Gktheta,' Q'],
             parent=panel, style=wx.CB_READONLY|wx.CB_DROPDOWN)
         choiceSizer.Add(self.choice2,0)
-        self.choice2.SetToolTipString('Switch between sin('+Gktheta+')/'+Gklambda+', q and 2'+Gktheta+' scale')
         self.choice2.Bind(wx.EVT_COMBOBOX, OnChoice2, id=wxID_FPRIMECHOICE2)
         mainSizer.Add(choiceSizer,0)
         mainSizer.Add((10,10),0)
@@ -446,8 +428,12 @@ without arguments fprime uses CuKa as default (Wave=1.54052A, E=8.0478keV)
     def OnMotion(self,event):
         if self.linePicked:
             xpos = event.xdata
-            if xpos and hasattr(self.fplot.canvas,'SetToolTipString'):
-                self.fplot.canvas.SetToolTipString('%9.3f'%(xpos))
+            if xpos:
+                if self.ifWave:
+                    Wave = xpos
+                else:
+                    Wave = self.Kev/xpos               
+                self.SetWaveEnergy(Wave)
                 
     def OnRelease(self, event):
         if self.linePicked is None: return
@@ -552,8 +538,6 @@ without arguments fprime uses CuKa as default (Wave=1.54052A, E=8.0478keV)
             self.SpinButton.SetValue(int(10000.*self.Wave))
             self.SpinText1.SetValue("%6.4f" % (self.Wave))
             self.SpinText2.SetValue("%7.4f" % (self.Energy))
-            self.SpinButton.SetToolTipString('Fine control of wavelength')
-            self.slider1.SetToolTipString('Coarse control of wavelength')
         else:
             self.ifWave = False
             self.NewFPPlot = True
@@ -566,8 +550,6 @@ without arguments fprime uses CuKa as default (Wave=1.54052A, E=8.0478keV)
             self.SpinButton.SetValue(int(10000.*self.Energy))
             self.SpinText1.SetValue("%6.4f" % (self.Wave))
             self.SpinText2.SetValue("%7.4f" % (self.Energy))
-            self.SpinButton.SetToolTipString('Fine control of energy')
-            self.slider1.SetToolTipString('Coarse control of energy')
         self.CalcFPPS()
         self.UpDateFPlot(self.Wave,rePlot=False)
 

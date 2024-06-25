@@ -1,19 +1,21 @@
 """Web absorption computation
 """
+
 import sys
 import os
-os.environ[ 'HOME' ] = '/tmp/'
+
+os.environ["HOME"] = "/tmp/"
 import webabsorb
 
-#This expects an input file with the following information
-# 1: chemical formula 
+# This expects an input file with the following information
+# 1: chemical formula
 # 2: radius of sample in mm
 # 3: name for graphic file (/tmp/result.png)
 # 4: flag for wavelength/energy (0 for energy, 1 for wavelength)
 # 5: wavelength/energy value (selected by above)
 # 6: flag for density/packing fraction (0 for density, 1 for packing fraction)
 # 7: packing fraction/density value (selected by above)
-''' Sample input:
+""" Sample input:
 C60Xe
 0.35
 /tmp/testout.png
@@ -21,9 +23,9 @@ C60Xe
 0.35
 0
 5
-'''
+"""
 
-# note: a formula contains elements numbers and optional spaces only 
+# note: a formula contains elements numbers and optional spaces only
 #        for example: 'C4 H9', 'H2O', 'MGO' or 'O MG' not 'OMG'
 
 
@@ -40,7 +42,7 @@ try:
         Wave = 0
         Energy = float(sys.stdin.readline())
 except:
-    print "<BR>Invalid Wavelength/Energy"
+    print("<BR>Invalid Wavelength/Energy")
     error = 1
 
 ifpack = sys.stdin.readline()
@@ -52,21 +54,21 @@ try:
         Packing = 0
         InputDensity = float(sys.stdin.readline())
 except:
-    print "<BR>Invalid Density/Packing Fraction"
+    print("<BR>Invalid Density/Packing Fraction")
     error = 1
 
 if error:
     sys.exit()
 
 try:
-    #print '<PRE>Radius=',Radius,  'Wave=',Wave, 'Energy=',Energy, 'Packing=',Packing, 'InputDensity=',InputDensity,'ifwave=',ifwave,'</PRE>'
+    # print '<PRE>Radius=',Radius,  'Wave=',Wave, 'Energy=',Energy, 'Packing=',Packing, 'InputDensity=',InputDensity,'ifwave=',ifwave,'</PRE>'
 
-    calc = webabsorb.Absorb(Radius,  Wave=Wave, Energy=Energy, 
-                            Packing=Packing, InputDensity=InputDensity)
-
+    calc = webabsorb.Absorb(
+        Radius, Wave=Wave, Energy=Energy, Packing=Packing, InputDensity=InputDensity
+    )
 
     calc.SetElems(formula)
     calc.ComputeMu()
-    calc.SaveFig(graphic, format='png' )
-except Exception, err:
-    print "Error:", err
+    calc.SaveFig(graphic, format="png")
+except Exception as err:
+    print("Error:", err)

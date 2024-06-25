@@ -150,9 +150,9 @@ class Absorb():
             Text += '%s%10.2f%s\n'%('X-ray small angle scattering contrast',(28.179*Fo/self.Volume)**2,'*10<sup>20/cm<sup>')
             if Fop:
                 Text += '%s%10.2f%s\n'%('Anomalous X-ray small angle scattering contrast',(28.179*Fop/self.Volume)**2,'*10<sup>20/cm<sup>')
-            print Text
+            print (Text)
         else: 
-            print "error in Volume computation"
+            print( "error in Volume computation")
         self.CalcFPPS()
         self.UpDateAbsPlot()
 

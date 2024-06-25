@@ -1,5 +1,3 @@
-
-
 ########### SVN repository information ###################
 # $Date$
 # $Author$
